@@ -1,11 +1,10 @@
 package com.hoarse.auction.web.entity.member;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.hoarse.auction.web.entity.role.Role;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,12 +22,25 @@ public class Member {
     @Column
     private String name;
 
-    @Column
+    @Column(length = 11, unique = true)
     private String phone;
 
     @Column
     private String password;
 
-    @Column
+    @Column(length = 45, unique = true)
     private String username; //email
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+
+    public void encodePassword(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(password);
+    }
+
+    public boolean checkPassword(PasswordEncoder passwordEncoder, String inputPassword) {
+
+        return passwordEncoder.matches(inputPassword, password);
+    }
 }

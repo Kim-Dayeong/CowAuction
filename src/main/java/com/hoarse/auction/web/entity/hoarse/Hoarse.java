@@ -44,14 +44,14 @@ public class Hoarse {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Hoarse mother;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Member producer;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Member owner;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id", nullable = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private Member producer;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private Member owner;
 
 }

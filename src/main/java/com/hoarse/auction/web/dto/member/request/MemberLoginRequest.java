@@ -1,4 +1,4 @@
-package com.hoarse.auction.web.dto.member;
+package com.hoarse.auction.web.dto.member.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
