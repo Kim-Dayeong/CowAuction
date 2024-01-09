@@ -1,15 +1,17 @@
 package com.hoarse.auction.web.service.member;
 
 import com.hoarse.auction.web.config.jwt.JwtTokenProvider;
+import com.hoarse.auction.web.dto.jwt.JwtToken;
 import com.hoarse.auction.web.dto.member.request.MemberSignUpRequest;
 
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.entity.role.Role;
 import com.hoarse.auction.web.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,60 +19,30 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+@Transactional(readOnly = true)
+@Slf4j
+public class MemberService  {
     private final MemberRepository memberRepository;
-
-    private final PasswordEncoder passwordEncoder;
-
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    // 회원가입
     @Transactional
+    public JwtToken signIn(String username, String password) {
+        // 1. username + password 를 기반으로 Authentication 객체 생성
+        // 이때 authentication 은 인증 여부를 확인하는 authenticated 값이 false
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
 
-    public Member signUp(MemberSignUpRequest requestDto) throws Exception {
-        if (memberRepository.findByusername(requestDto.getUsername()).isPresent()) {
-            throw new Exception("이미 존재하는 아이디 입니다.");
-        }
-        if (!requestDto.getPassword().equals(requestDto.getCheckedPassword())) {
-            throw new Exception("비밀번호가 일치하지 않습니다.");
-        }
+        // 2. 실제 검증. authenticate() 메서드를 통해 요청된 Member 에 대한 검증 진행
+        // authenticate 메서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드 실행
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        Member member = createSignupFormOfUser(requestDto);
-        memberRepository.save(member);
-        return member;
-    }
+        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
-
-    private Member createSignupFormOfUser(final MemberSignUpRequest req){
-        return Member.builder()
-                .username(req.getUsername())
-                .password(passwordEncoder.encode(req.getPassword()))
-                .name(req.getName())
-                .phone(req.getPhone())
-                .role(Role.USER)
-                .build();
-    }
-
-    // 로그인
-    @Transactional
-    public String login(Map<String, String> members) {
-
-        Member member = memberRepository.findByusername(members.get("username"))
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
-
-        String password = members.get("password");
-        if (!member.checkPassword(passwordEncoder, password)) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
-        }
-
-        List<String> roles = new ArrayList<>();
-        roles.add(member.getRole().name());
-
-        return jwtTokenProvider.createToken(member.getUsername(), roles);
-
-
+        return jwtToken;
     }
 }

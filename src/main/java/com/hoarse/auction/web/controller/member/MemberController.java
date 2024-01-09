@@ -3,6 +3,7 @@ package com.hoarse.auction.web.controller.member;
 import com.hoarse.auction.web.dto.member.request.MemberSignUpRequest;
 
 import com.hoarse.auction.web.service.member.MemberService;
+import io.jsonwebtoken.Jwts;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,10 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/join")
-    @ResponseStatus(HttpStatus.OK)
-    public Long join(@Valid @RequestBody MemberSignUpRequest request) throws Exception {
-        return memberService.signUp(request);
+    @GetMapping("/")
+    public ResponseEntity<String> testPostRequest() {
+        return ResponseEntity.ok("POST request successful");
     }
+
+
 }
