@@ -9,10 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import  org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
@@ -40,37 +37,55 @@ public class Member implements UserDetails {
     @Column(length = 45, unique = true)
     private String username; //email
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 
+    @Builder
+    private Member(String password, Role role, String username) {
+        this.password = password;
+        this.role= role;
+        this.username = username;
+    }
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        // 계정의 권한 목록을 리턴
+        Set<GrantedAuthority> roles = new HashSet<>();
+        roles.add(new SimpleGrantedAuthority(role.getValue()));
+        return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password; // 계정의 비밀번호 리턴
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username; // 계정의 고유한 값 리턴
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return true; // 계정의 만료 여부 리턴
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return true; // 계정의 잠김 여부 리턴
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return true;  // 비밀번호 만료 여부 리턴
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return true; // 계정의 활성화 여부 리턴
     }
 
 

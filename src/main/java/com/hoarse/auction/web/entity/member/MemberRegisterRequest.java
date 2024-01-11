@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 //@NoArgsConstructor
 //@Getter
 //@Builder
-public class MemberRegisterRequest {
+//public class MemberRegisterRequest {
 //    private String employNumber;
 //    private String employName;
 //    private String phoneNumber;
@@ -24,6 +24,6 @@ public class MemberRegisterRequest {
 //                .password(password)
 //                .adminKey(this.adminKey)
 //                .build();
-//    }
-}
+////    }
+//}
 

@@ -1,26 +1,41 @@
 package com.hoarse.auction.web.controller.member;
 
-import com.hoarse.auction.web.dto.member.request.MemberSignUpRequest;
+import com.hoarse.auction.web.config.jwt.JwtConfig;
+
+import com.hoarse.auction.web.dto.member.MemberDto;
+import com.hoarse.auction.web.dto.member.request.MemberRequest;
 
 import com.hoarse.auction.web.service.member.MemberService;
 import io.jsonwebtoken.Jwts;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+
+@Slf4j
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtConfig jwtConfig;
 
-    @GetMapping("/")
-    public ResponseEntity<String> testPostRequest() {
-        return ResponseEntity.ok("POST request successful");
+
+    @PostMapping("/signup")
+    public MemberDto createUser(MemberRequest memberRequest) {
+        return memberService.createUser(memberRequest);
     }
+
+    @PostMapping("/login")
+    public String login(MemberRequest memberRequest) {
+        MemberDto member = memberService.findByEmailAndPassword(memberRequest.getUsername(), memberRequest.getPassword());
+        return jwtConfig.createToken(member.getUsername(), Arrays.asList(member.getRole().getValue()));
+    }
+
 
 
 }
