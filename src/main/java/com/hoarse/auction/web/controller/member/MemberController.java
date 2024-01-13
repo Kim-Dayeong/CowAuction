@@ -47,7 +47,7 @@ public class MemberController {
     @GetMapping("/my")
     public MemberDto findUser(Authentication authentication) {
         if (authentication == null) {
-            throw new BadCredentialsException("회원 정보를 찾을 수 없습니다.");
+            throw new BadCredentialsException("회원 정보를 찾을 수 없습니다.(로그인 안됨)");
         }
         return memberService.findUser(authentication.getName());
     }

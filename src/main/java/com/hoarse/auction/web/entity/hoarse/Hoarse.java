@@ -7,6 +7,10 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -16,23 +20,24 @@ import org.springframework.data.annotation.Id;
 public class Hoarse {
 
     @jakarta.persistence.Id
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="HoarseId")
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String birth;
 
-    @Column
+    @Column(nullable = false)
     private String furcolor;
 
     @Column
     private Integer nearvalue; // 근친율
 
+//    @Column(unique = true, nullable = false)
+//    private String uuid = UUID.randomUUID().toString(); // 고유 번호 , UUID
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "father_id")
@@ -44,14 +49,33 @@ public class Hoarse {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Hoarse mother;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "member_id", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private Member producer;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Member producer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "member_id")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private Member owner;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Member owner;
+
+    @OneToMany(mappedBy = "mother", fetch = FetchType.LAZY)
+    private List<Hoarse> motherChildren = new ArrayList<>();
+
+    @OneToMany(mappedBy = "father", fetch = FetchType.LAZY)
+    private List<Hoarse> fatherChildren = new ArrayList<>();
+
+    @Builder
+    private Hoarse(String name, String birth, String furcolor,Hoarse mother, Hoarse father
+    , Member owner, Member producer, String uuid){
+        this.name = name;
+        this.birth = birth;
+        this.furcolor = furcolor;
+        this.mother = mother;
+        this.father = father;
+        this.owner = owner;
+        this.producer = producer;
+//        this.uuid = uuid;
+    }
 
 }

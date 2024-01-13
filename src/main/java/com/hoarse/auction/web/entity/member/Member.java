@@ -25,13 +25,13 @@ public class Member implements UserDetails {
     @Column(name="MemberId")
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column(length = 11, unique = true)
+    @Column(length = 11, unique = true, nullable = false)
     private String phone;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column(length = 45, unique = true)
