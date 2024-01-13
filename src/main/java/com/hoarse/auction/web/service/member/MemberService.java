@@ -1,7 +1,7 @@
 package com.hoarse.auction.web.service.member;
 
 import com.hoarse.auction.web.dto.member.MemberDto;
-import com.hoarse.auction.web.dto.member.request.MemberRequest;
+import com.hoarse.auction.web.dto.member.MemberRequest;
 
 import java.util.List;
 
