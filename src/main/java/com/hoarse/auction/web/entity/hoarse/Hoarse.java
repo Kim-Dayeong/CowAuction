@@ -36,8 +36,8 @@ public class Hoarse {
     @Column
     private Integer nearvalue; // 근친율
 
-//    @Column(unique = true, nullable = false)
-//    private String uuid = UUID.randomUUID().toString(); // 고유 번호 , UUID
+    @Column(unique = true, nullable = false)
+    private String uniqueNum; // 고유 번호
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "father_id")
@@ -67,7 +67,7 @@ public class Hoarse {
 
     @Builder
     private Hoarse(String name, String birth, String furcolor,Hoarse mother, Hoarse father
-    , Member owner, Member producer, String uuid){
+    , Member owner, Member producer, String uniqueNum){
         this.name = name;
         this.birth = birth;
         this.furcolor = furcolor;
@@ -75,7 +75,8 @@ public class Hoarse {
         this.father = father;
         this.owner = owner;
         this.producer = producer;
-//        this.uuid = uuid;
+        this.uniqueNum = uniqueNum;
+
     }
 
 }

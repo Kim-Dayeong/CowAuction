@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class HoarseinfoDto {
-    private String uuid;
+    private String uniqueNum;
     private Hoarse mother;
     private Hoarse father;
     private String producer;

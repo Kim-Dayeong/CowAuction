@@ -20,11 +20,11 @@ public class HoarseDto {
     private Hoarse mother;
     private Hoarse father;
     private Member producer;
-    private String uuid;
+    private String uniqueNum;
 
     @Builder
     private HoarseDto(Long id, String name, String birth, String furcolor, Member owner,
-                      Hoarse mother, Hoarse father, Member producer, String uuid){
+                      Hoarse mother, Hoarse father, Member producer, String uniqueNum){
         this.id = id;
         this.name = name;
         this.birth = birth;
@@ -33,7 +33,7 @@ public class HoarseDto {
         this.mother = mother;
         this.father = father;
         this.producer = producer;
-        this.uuid = uuid;
+        this.uniqueNum = uniqueNum;
     }
 
 }
