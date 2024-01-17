@@ -1,15 +1,10 @@
 package com.hoarse.auction.web.entity.chat;
 
-import com.hoarse.auction.web.config.socket.WebSocketConfig;
 import com.hoarse.auction.web.dto.chat.ChatMessageDto;
-import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.chat.ChatService;
-import com.hoarse.auction.web.serviceImpl.chat.ChatServiceImpl;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.HashSet;
@@ -35,7 +30,7 @@ public class ChatRoom {
         this.name = name;
     }
 
-    public void handleAction(WebSocketSession session, ChatMessageDto message, ChatServiceImpl service) {
+    public void handleAction(WebSocketSession session, ChatMessageDto message, ChatService service) {
         // message 에 담긴 타입을 확인한다.
         // 이때 message 에서 getType 으로 가져온 내용이
         // ChatDTO 의 열거형인 MessageType 안에 있는 ENTER 과 동일한 값이라면
