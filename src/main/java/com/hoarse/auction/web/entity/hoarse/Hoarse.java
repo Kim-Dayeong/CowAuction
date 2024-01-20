@@ -36,6 +36,9 @@ public class Hoarse {
     @Column
     private Integer nearvalue; // 근친율
 
+    // 관심수 (경매 관심)
+
+
     @Column(unique = true, nullable = false)
     private String uniqueNum; // 고유 번호
 

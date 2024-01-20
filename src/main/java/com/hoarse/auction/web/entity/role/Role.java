@@ -18,7 +18,7 @@ public enum Role {
 
     USER("ROLE_USER"),
     ADMIN("ROLE_ADMIN"),
-    OWNER("ROLE_OWNER"); // 경매주 , 마주
+    OWNER("ROLE_PRODUCER"); // 경매주 , 마주
 
     private String value;
 }
