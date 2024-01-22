@@ -1,9 +1,13 @@
 package com.hoarse.auction.web.controller.auction;
 
+import com.hoarse.auction.web.entity.Bid;
 import com.hoarse.auction.web.entity.chat.ChatRoom;
+import com.hoarse.auction.web.service.auction.AuctionService;
 import com.hoarse.auction.web.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.List;
 public class AcutionController {
 
     private final ChatService chatService;
+    private final AuctionService auctionService;
 
     // 경매 채팅방 생성
     @PostMapping
@@ -30,14 +35,11 @@ public class AcutionController {
     }
 
 
-    // 채팅방 퇴장
-
-
-
-    // 채팅 내역 불러오기
-
-
-    // 채팅 내역 삭제 (실시간 경매 종료)
+//
+    @MessageMapping("/bid/{itemId}")
+    public void placeBid(@DestinationVariable String itemId, Bid bid) {
+        auctionService.placeBid(itemId, bid);
+    }
 
 
 }

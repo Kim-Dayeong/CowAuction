@@ -10,7 +10,7 @@ import lombok.*;
 public class ChatMessageDto {
 
     public enum MessageType{
-        ENTER, TALK
+    ENTER, TALK , QUIT
     }
 
     private MessageType type;

@@ -86,6 +86,10 @@ dependencies {
 // redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+	// stomp
+//	implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
+
+
 
 }
 
