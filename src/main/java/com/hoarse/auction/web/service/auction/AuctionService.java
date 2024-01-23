@@ -2,7 +2,7 @@ package com.hoarse.auction.web.service.auction;
 
 import com.hoarse.auction.web.entity.Bid;
 import com.hoarse.auction.web.entity.auction.AuctionRoom;
-import com.hoarse.auction.web.repository.Auction.AuctionRepository;
+
 import com.hoarse.auction.web.repository.Auction.AuctionRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

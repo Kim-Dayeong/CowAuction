@@ -19,7 +19,7 @@ public class Bid {
     @Column(name="Bid_Id")
     private Long id;
 
-    @Column
+
     @OneToOne
     private Hoarse hoarse;
 
