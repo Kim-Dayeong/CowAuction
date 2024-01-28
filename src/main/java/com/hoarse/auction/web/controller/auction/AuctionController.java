@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/auction")
-public class AcutionController {
+public class AuctionController {
 
     private final ChatService chatService;
     private final AuctionService auctionService;
@@ -36,10 +36,10 @@ public class AcutionController {
 
 
 //
-    @MessageMapping("/bid/{itemId}")
-    public void placeBid(@DestinationVariable String itemId, Bid bid) {
-        auctionService.placeBid(itemId, bid);
-    }
+//    @MessageMapping("/bid/{itemId}")
+//    public void placeBid(@DestinationVariable String itemId, Bid bid) {
+//        auctionService.placeBid(itemId, bid);
+//    }
 
 
 }

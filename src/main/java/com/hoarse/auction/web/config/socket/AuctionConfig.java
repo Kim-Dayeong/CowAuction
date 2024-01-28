@@ -1,4 +1,26 @@
-package com.hoarse.auction.web.config.socket;
-
-public class AuctionConfig {
-}
+//package com.hoarse.auction.web.config.socket;
+//
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+//import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+//import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+//import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+//@Configuration
+//@EnableWebSocketMessageBroker
+//public class AuctionConfig  implements WebSocketMessageBrokerConfigurer {
+//
+//    @Override
+//    public void registerStompEndpoints(StompEndpointRegistry registry) {
+//        registry.addEndpoint("/ws/auction").setAllowedOriginPatterns("*").withSockJS();
+//    }
+//
+//    @Override
+//    public void configureMessageBroker(MessageBrokerRegistry registry) {
+//        // 클라이언트가 구독
+//        registry.enableSimpleBroker( "/topic");
+//        // 클라이언트로 부터 송신
+//        registry.setApplicationDestinationPrefixes("/app");
+//    }
+//
+//
+//}

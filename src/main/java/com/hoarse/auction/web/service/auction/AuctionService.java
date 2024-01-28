@@ -3,37 +3,46 @@ package com.hoarse.auction.web.service.auction;
 import com.hoarse.auction.web.entity.Bid;
 import com.hoarse.auction.web.entity.auction.AuctionRoom;
 
+import com.hoarse.auction.web.entity.chat.ChatRoom;
 import com.hoarse.auction.web.repository.Auction.AuctionRoomRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+
 @Service
 public class AuctionService {
 
-    private final SimpMessagingTemplate messagingTemplate;
-    @Autowired
-    private AuctionRoomRepository auctionRoomRepository;
+    private Map<String, ChatRoom> chatRooms;
 
-    // 경매 방 생성
-    public AuctionRoom createAuctoinRoom(String roomName){
-        AuctionRoom auctionRoom = new AuctionRoom();
-        auctionRoom.setRoomName(roomName);
-        return auctionRoomRepository.save(auctionRoom);
+    @PostConstruct
+    //의존관게 주입완료되면 실행되는 코드
+    private void init() {
+        chatRooms = new LinkedHashMap<>();
     }
 
-    @Autowired
-    public AuctionService(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    //채팅방 불러오기
+    public List<ChatRoom> findAllRoom() {
+        //채팅방 최근 생성 순으로 반환
+        List<ChatRoom> result = new ArrayList<>(chatRooms.values());
+        Collections.reverse(result);
+
+        return result;
     }
 
-    public void placeBid(String itemId, Bid bid) {
-        // 경매 관련 로직 수행
-
-        // Redis에 경매 상태 저장
-        // redisTemplate.opsForValue().set("auction:" + itemId, auctionState);
-
-        // WebSocket으로 입찰 정보 브로드캐스팅
-        messagingTemplate.convertAndSend("/topic/auction/" + itemId, bid);
+    //채팅방 하나 불러오기
+    public ChatRoom findById(String roomId) {
+        return chatRooms.get(roomId);
     }
+
+    //채팅방 생성
+    public ChatRoom createRoom(String name) {
+        ChatRoom chatRoom = ChatRoom.create(name);
+        chatRooms.put(chatRoom.getRoomId(), chatRoom);
+        return chatRoom;
+    }
+
+
 }
