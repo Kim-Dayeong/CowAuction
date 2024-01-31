@@ -1,48 +1,35 @@
 package com.hoarse.auction.web.service.auction;
 
-import com.hoarse.auction.web.entity.Bid;
-import com.hoarse.auction.web.entity.auction.AuctionRoom;
-
-import com.hoarse.auction.web.entity.chat.ChatRoom;
-import com.hoarse.auction.web.repository.Auction.AuctionRoomRepository;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
-import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class AuctionService {
 
-    private Map<String, ChatRoom> chatRooms;
+    private static final String AUCTION_KEY = "auction";
+    private static final long AUCTION_DURATION = TimeUnit.MINUTES.toMillis(10); // 10분 경매
 
-    @PostConstruct
-    //의존관게 주입완료되면 실행되는 코드
-    private void init() {
-        chatRooms = new LinkedHashMap<>();
+    public static void main(String[] args) {
+        long auctionStartTime = System.currentTimeMillis();
+        long auctionEndTime = auctionStartTime + AUCTION_DURATION;
+
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+            // 경매 시작 시간 저장
+            jedis.set("auctionStartTime", String.valueOf(auctionStartTime));
+
+            // 경매 진행 중...
+            // Redis에 값 저장 (경매 종료 시간 이전에만 저장)
+            long currentTime = System.currentTimeMillis();
+            if (currentTime < auctionEndTime) {
+                String key = AUCTION_KEY + ":" + currentTime;
+                String value = "Auction data...";
+                jedis.set(key, value);
+                System.out.println("Value saved in Redis: " + value);
+            } else {
+                System.out.println("Auction has ended. Value will not be saved in Redis.");
+            }
+        }
     }
-
-    //채팅방 불러오기
-    public List<ChatRoom> findAllRoom() {
-        //채팅방 최근 생성 순으로 반환
-        List<ChatRoom> result = new ArrayList<>(chatRooms.values());
-        Collections.reverse(result);
-
-        return result;
-    }
-
-    //채팅방 하나 불러오기
-    public ChatRoom findById(String roomId) {
-        return chatRooms.get(roomId);
-    }
-
-    //채팅방 생성
-    public ChatRoom createRoom(String name) {
-        ChatRoom chatRoom = ChatRoom.create(name);
-        chatRooms.put(chatRoom.getRoomId(), chatRoom);
-        return chatRoom;
-    }
-
-
 }

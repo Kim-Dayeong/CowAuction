@@ -1,13 +1,10 @@
 package com.hoarse.auction.web.controller.auction;
 
-import com.hoarse.auction.web.entity.Bid;
 import com.hoarse.auction.web.entity.chat.ChatRoom;
-import com.hoarse.auction.web.service.auction.AuctionService;
-import com.hoarse.auction.web.service.chat.ChatService;
+import com.hoarse.auction.web.service.auction.AuctionRoomService;
+import com.hoarse.auction.web.service.chat.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,20 +15,20 @@ import java.util.List;
 @RequestMapping("/auction")
 public class AuctionController {
 
-    private final ChatService chatService;
-    private final AuctionService auctionService;
+    private final ChatRoomService chatRoomService;
+    private final AuctionRoomService auctionRoomService;
 
     // 경매 채팅방 생성
     @PostMapping
     public ChatRoom createRoom(@RequestParam String name){
-        return chatService.createRoom(name);
+        return chatRoomService.createRoom(name);
     }
 
 
     // 채팅방 입장
     @GetMapping
     public List<ChatRoom> findAllRooms(){
-        return chatService.findAllRoom();
+        return chatRoomService.findAllRoom();
     }
 
 

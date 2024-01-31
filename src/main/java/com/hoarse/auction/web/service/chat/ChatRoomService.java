@@ -1,23 +1,19 @@
 package com.hoarse.auction.web.service.chat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoarse.auction.web.entity.chat.ChatRoom;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.util.*;
 
 @Slf4j
 @Data
 @Service
 @RequiredArgsConstructor
-public class ChatService {
+public class ChatRoomService {
     //    private final ObjectMapper mapper;
     private Map<String, ChatRoom> chatRooms;
 

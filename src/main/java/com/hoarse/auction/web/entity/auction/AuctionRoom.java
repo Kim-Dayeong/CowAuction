@@ -1,27 +1,34 @@
 package com.hoarse.auction.web.entity.auction;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.hoarse.auction.web.entity.chat.ChatRoom;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
-@NoArgsConstructor
-@AllArgsConstructor
+import java.io.Serializable;
+import java.util.UUID;
+
+@Data
 @Getter
 @Setter
-@Builder
-@Entity(name = "AuctionRoom")
-public class AuctionRoom {
+@NoArgsConstructor
+@Entity
+public class AuctionRoom implements Serializable {
 
-    @jakarta.persistence.Id
+    private static final long serialVersionUID = 6494678977089006639L;
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="AuctionRoom_Id")
-    private Long id;
+    private String roomId;
 
-    @Column
     private String roomName;
 
+//    private Set<WebSocketSession> sessions = new HashSet<>();
+
+    public static AuctionRoom create(String name) {
+        AuctionRoom room = new AuctionRoom();
+        room.roomId = UUID.randomUUID().toString();
+        room.roomName = name;
+        return room;
+    }
 }
 

@@ -1,14 +1,9 @@
 package com.hoarse.auction.web.entity.chat;
 
-import com.hoarse.auction.web.dto.chat.ChatMessageDto;
-import com.hoarse.auction.web.service.chat.ChatService;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 

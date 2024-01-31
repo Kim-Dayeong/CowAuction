@@ -1,11 +1,8 @@
 package com.hoarse.auction.web.controller.chat;
 
 import com.hoarse.auction.web.entity.chat.ChatRoom;
-import com.hoarse.auction.web.service.chat.ChatService;
+import com.hoarse.auction.web.service.chat.ChatRoomService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatRoomController {
-    private final ChatService chatService;
+    private final ChatRoomService chatRoomService;
 
     // 채팅 리스트 화면
     @GetMapping("/room")
@@ -27,13 +24,13 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     @ResponseBody
     public List<ChatRoom> room() {
-        return chatService.findAllRoom();
+        return chatRoomService.findAllRoom();
     }
     // 채팅방 생성
     @PostMapping("/room")
     @ResponseBody
     public ChatRoom createRoom(@RequestParam String name) {
-        return chatService.createRoom(name);
+        return chatRoomService.createRoom(name);
     }
     // 채팅방 입장 화면
     @GetMapping("/room/enter/{roomId}")
@@ -45,6 +42,6 @@ public class ChatRoomController {
     @GetMapping("/room/{roomId}")
     @ResponseBody
     public ChatRoom roomInfo(@PathVariable String roomId) {
-        return chatService.findById(roomId);
+        return chatRoomService.findById(roomId);
     }
 }
