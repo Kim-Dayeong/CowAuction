@@ -15,21 +15,21 @@ import java.util.List;
 @RequestMapping("/auction")
 public class AuctionController {
 
-    private final ChatRoomService chatRoomService;
-    private final AuctionRoomService auctionRoomService;
-
-    // 경매 채팅방 생성
-    @PostMapping
-    public ChatRoom createRoom(@RequestParam String name){
-        return chatRoomService.createRoom(name);
-    }
-
-
-    // 채팅방 입장
-    @GetMapping
-    public List<ChatRoom> findAllRooms(){
-        return chatRoomService.findAllRoom();
-    }
+//    private final ChatRoomService chatRoomService;
+//    private final AuctionRoomService auctionRoomService;
+//
+//    // 경매 채팅방 생성
+//    @PostMapping
+//    public ChatRoom createRoom(@RequestParam String name){
+//        return chatRoomService.createRoom(name);
+//    }
+//
+//
+//    // 채팅방 입장
+//    @GetMapping
+//    public List<ChatRoom> findAllRooms(){
+//        return chatRoomService.findAllRoom();
+//    }
 
 
 //
