@@ -13,7 +13,7 @@ public class AuctionRoomService {
     private Map<String, AuctionRoom> auctionRooms;
 
     @PostConstruct
-    //의존관게 주입완료되면 실행되는 코드
+    //의존관계 주입완료되면 실행되는 코드
     private void init() {
         auctionRooms = new LinkedHashMap<>();
     }

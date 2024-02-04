@@ -9,7 +9,7 @@ import redis.clients.jedis.Jedis;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.hoarse.auction.web.module.Timeout.runWithTimeout;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class ChatMessageController {
 
 
         @MessageMapping("/chat/message")
-        public void enter (ChatMessage message){
+        public void enter (ChatMessage message) {
             if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
                 message.setMessage(message.getSender() + "님이 입장하였습니다.");
             }
@@ -33,30 +33,30 @@ public class ChatMessageController {
             // Redis 서버에 연결
             Jedis jedis = new Jedis("localhost", 6379);
 
-            try {
-                // Redis에 String 저장
-                String key = "test";
-                String value = message.getMessage();
-                jedis.set(key, value);
+//            try {
+//                // Redis에 String 저장
+//                String key = "test";
+//                String value = message.getMessage();
+//                jedis.set(key, value);
+//
+//                // Redis에서 String 읽기
+//                String retrievedValue = jedis.get(key);
+//                System.out.println("Retrieved value from Redis: " + retrievedValue);
+//            } finally {
+//                // 연결 닫기
+//                jedis.close();
+//            }
+//
+//            runWithTimeout(() -> {
+//                // 여기에 실행하고자 하는 코드를 넣으세요
+//                // 예: HTTP 요청, 파일 읽기 등
+//                System.out.println("실행중");
+//                return "";
+//            }, 20, TimeUnit.SECONDS); // 타임아웃을 5초로 설정
+//        }
 
-                // Redis에서 String 읽기
-                String retrievedValue = jedis.get(key);
-                System.out.println("Retrieved value from Redis: " + retrievedValue);
-            } finally {
-                // 연결 닫기
-                jedis.close();
-            }
 
-            runWithTimeout(() -> {
-                // 여기에 실행하고자 하는 코드를 넣으세요
-                // 예: HTTP 요청, 파일 읽기 등
-                System.out.println("실행중");
-                return "";
-            }, 20, TimeUnit.SECONDS); // 타임아웃을 5초로 설정
         }
-
-
-
 
 
 }
