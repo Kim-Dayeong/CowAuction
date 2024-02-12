@@ -1,6 +1,7 @@
 package com.hoarse.auction.web.dto.auction;
 
 import com.hoarse.auction.web.dto.chat.ChatMessageDto;
+import com.hoarse.auction.web.entity.member.Member;
 import lombok.*;
 
 @Builder
@@ -16,7 +17,7 @@ public class AuctionMessageDto {
 
     private ChatMessageDto.MessageType type;
     private String roomId;
-    private String sender;
+    private Member sender;
     private String message;
     private String time;
 }

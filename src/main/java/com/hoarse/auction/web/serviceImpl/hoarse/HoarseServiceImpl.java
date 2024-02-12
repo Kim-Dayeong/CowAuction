@@ -2,6 +2,7 @@ package com.hoarse.auction.web.serviceImpl.hoarse;
 
 import com.hoarse.auction.web.dto.hoarse.HoarseDto;
 import com.hoarse.auction.web.dto.hoarse.HoarseRequest;
+import com.hoarse.auction.web.dto.hoarse.HoarseResponseDTO;
 import com.hoarse.auction.web.entity.hoarse.Hoarse;
 import com.hoarse.auction.web.module.RandomMaker;
 import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,6 +43,20 @@ public class HoarseServiceImpl implements HoarseService {
                 .birth(hoarse.getBirth())
                 .owner(hoarse.getOwner()).producer(hoarse.getProducer()).father(hoarse.getFather()).mother(hoarse.getMother())
                 .build();
+
+    }
+
+    @Override
+    public List<HoarseResponseDTO> hoarseList(){
+        List<Hoarse> hoarses = hoarseRepository.findAll();
+        List<HoarseResponseDTO> hoarselist = new ArrayList<>();
+
+        for (Hoarse hoarse : hoarses){
+            HoarseResponseDTO hoarseDto = new HoarseResponseDTO(hoarse);
+            hoarselist.add(hoarseDto);
+        }
+
+        return hoarselist;
 
     }
 }

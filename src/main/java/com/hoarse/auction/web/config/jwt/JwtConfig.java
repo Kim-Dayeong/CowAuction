@@ -1,6 +1,7 @@
 package com.hoarse.auction.web.config.jwt;
 
 
+import com.hoarse.auction.web.config.security.SecurityUserDetailService;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class JwtConfig {
     @Value("${JWT_EXPIRE_TIME}")
     private long expireTime;
 
-    private final UserDetailsService userDetailsService;
+    private final SecurityUserDetailService userDetailService;
 
     @PostConstruct
     protected void init() {
@@ -53,7 +54,7 @@ public class JwtConfig {
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
         String email = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        UserDetails userDetails = userDetailService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

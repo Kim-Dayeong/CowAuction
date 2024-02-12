@@ -28,12 +28,12 @@ public class MemberController {
 
 
     @PostMapping("/signup")
-    public MemberDto createUser(MemberRequest memberRequest) {
+    public MemberDto createUser(@RequestBody MemberRequest memberRequest) {
         return memberService.createUser(memberRequest);
     }
 
     @PostMapping("/login")
-    public String login(MemberRequest memberRequest) {
+    public String login(@RequestBody MemberRequest memberRequest) {
         MemberDto member = memberService.findByEmailAndPassword(memberRequest.getUsername(), memberRequest.getPassword());
         return jwtConfig.createToken(member.getUsername(), Arrays.asList(member.getRole().getValue()));
     }

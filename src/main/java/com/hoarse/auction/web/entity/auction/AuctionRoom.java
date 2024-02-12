@@ -17,7 +17,7 @@ public class AuctionRoom implements Serializable {
     private static final long serialVersionUID = 6494678977089006639L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String roomId;
 
     private String roomName;
