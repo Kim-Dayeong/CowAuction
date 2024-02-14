@@ -1,6 +1,7 @@
 package com.hoarse.auction.web.entity.auction;
 
 import com.hoarse.auction.web.entity.chat.ChatRoom;
+import com.hoarse.auction.web.entity.hoarse.Hoarse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Entity
 public class AuctionRoom implements Serializable {
 
-    private static final long serialVersionUID = 6494678977089006639L;
+    private static final long serialVersionUID = 6494678977089006639L; // 수정
 
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +23,18 @@ public class AuctionRoom implements Serializable {
 
     private String roomName;
 
+    @OneToOne
+    @JoinColumn(name = "hoarse_id") //단방향 일대일 매핑
+    Hoarse hoarse;
+
+
 //    private Set<WebSocketSession> sessions = new HashSet<>();
 
-    public static AuctionRoom create(String name) {
+    public static AuctionRoom create(String name, Hoarse hoarse) {
         AuctionRoom room = new AuctionRoom();
         room.roomId = UUID.randomUUID().toString();
         room.roomName = name;
+        room.hoarse = hoarse;
         return room;
     }
 }

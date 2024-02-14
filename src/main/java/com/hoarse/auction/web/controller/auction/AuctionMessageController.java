@@ -38,7 +38,6 @@ public class AuctionMessageController {
                 jedis.set("endTime",String.valueOf(System.currentTimeMillis()+auctionDuringtime));
 
             }
-
         }
 
         sendingOperations.convertAndSend("/topic/auction/room/" + message.getRoomId(), message);

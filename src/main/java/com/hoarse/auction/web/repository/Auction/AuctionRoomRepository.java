@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AuctionRoomRepository extends JpaRepository<AuctionRoom, Long> {
+
+    AuctionRoom findByRoomId(String roomId);
+
+
 }

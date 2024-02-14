@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HoarseRepository extends JpaRepository<Hoarse, Long> {
    Hoarse findByName(String name);
+
+   Hoarse findByuniqueNum(String uniqueNum);
 }

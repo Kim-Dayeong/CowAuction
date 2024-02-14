@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@Slf4j
-@RequiredArgsConstructor
-@RequestMapping("/auction")
-public class AuctionController {
+//import java.util.List;
+//
+//@RestController
+//@Slf4j
+//@RequiredArgsConstructor
+//@RequestMapping("/auction")
+//public class AuctionController {
 
 //    private final ChatRoomService chatRoomService;
 //    private final AuctionRoomService auctionRoomService;
@@ -38,5 +38,5 @@ public class AuctionController {
 //        auctionService.placeBid(itemId, bid);
 //    }
 
-
-}
+//
+//}

@@ -31,8 +31,10 @@ public class AuctionRoomController {
     // 채팅방 생성
     @PostMapping("/room")
     @ResponseBody
-    public AuctionRoom createRoom(@RequestParam String name) {
-        return auctionRoomService.createRoom(name);
+    public AuctionRoom createRoom(@RequestParam String name, @RequestParam String hoarseId) {
+
+        System.out.println("아이디!!!!!"+hoarseId);
+        return auctionRoomService.createRoom(name, hoarseId);
     }
     // 채팅방 입장 화면
     @GetMapping("/room/enter/{roomId}")
