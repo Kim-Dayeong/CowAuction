@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +21,7 @@ import static org.apache.commons.lang3.StringUtils.stripStart;
 public class AuctionService {
 
     private static final String AUCTION_KEY = "auction";
+    private static final String CHAT_KEY_PREFIX = "";
 
     private final HoarseRepository hoarseRepository;
     private final AuctionRoomRepository auctionRoomRepository;
@@ -154,10 +156,16 @@ public class AuctionService {
     private void auction(String value, AuctionMessage message) {
 
         AuctionRoom auctionRoom = auctionRoomRepository.findByRoomId(message.getRoomId());
+      System.out.println("경매룸 아이디:"+message.getRoomId());
+
         if (auctionRoom == null) {
             System.out.println("경매 방을 찾을 수 없습니다.");
             return;
         }
+
+        // redis에서 채팅방 리스트 만들기
+        addChatMessage(message.getRoomId(), message.getMessage());
+
         Hoarse hoarse = auctionRoom.getHoarse();
 
         try (Jedis jedis = new Jedis("localhost", 6379)) {
@@ -175,6 +183,20 @@ public class AuctionService {
             System.out.println("Redis 연결 중 오류가 발생했습니다.");
         }
     }
+
+    public void addChatMessage(String roomId, String message) {
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+            jedis.rpush(roomId, message); // 채팅 메시지를 해당 채팅방의 링크드 리스트에 추가
+        }
+    }
+
+    public List<String> getChatMessages(String roomId, int start, int end) {
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+            String roomKey = roomId;
+            return jedis.lrange(roomKey, start, end); // 지정된 범위의 채팅 메시지 가져오기
+        }
+    }
+
 
 
 //    private void auction(String value, AuctionMessage message) {
