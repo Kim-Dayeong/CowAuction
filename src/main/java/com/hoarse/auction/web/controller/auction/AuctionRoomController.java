@@ -40,6 +40,9 @@ public class AuctionRoomController {
     @GetMapping("/room/enter/{roomId}")
     public String roomDetail(Model model, @PathVariable String roomId) {
         model.addAttribute("roomId", roomId);
+        //최초로 roomid 조회후 캐시 저장
+//        auctionRoomService.findRoom(roomId);
+
         return "/auction/roomdetail";
     }
     // 특정 채팅방 조회

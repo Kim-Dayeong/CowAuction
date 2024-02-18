@@ -9,16 +9,16 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang3.StringUtils.isNumeric;
-import static org.apache.commons.lang3.StringUtils.stripStart;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
 public class AuctionService {
+
+
 
     private static final String AUCTION_KEY = "auction";
     private static final String CHAT_KEY_PREFIX = "";
@@ -35,11 +35,77 @@ public class AuctionService {
         jedis.set(key,value);
     }
 
+    public AuctionService(HoarseRepository hoarseRepository, AuctionRoomRepository auctionRoomRepository) {
+        this.hoarseRepository = hoarseRepository;
+        this.auctionRoomRepository = auctionRoomRepository;
+        auctionInit(); // 생성자에서 초기화 메서드 호출
+    }
+
+
+    private void auction(String value, AuctionMessage message) {
+
+        AuctionRoom auctionRoom = auctionRoomRepository.findByRoomId(message.getRoomId());
+        System.out.println("경매룸 아이디:"+message.getRoomId());
+
+        if (auctionRoom == null) {
+            System.out.println("경매 방을 찾을 수 없습니다.");
+            return;
+        }
+
+        Hoarse hoarse = auctionRoom.getHoarse();
+
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+            System.out.println("실행 분기 테스트");
+
+            Long endTime = Long.parseLong(jedis.get("endTime"));
+            if (System.currentTimeMillis() < endTime) {
+
+                // 비교값 저장
+                String key = AUCTION_KEY + ":" + hoarse.getName() ;
+                jedis.set(key, value);
+                String backupKey = AUCTION_KEY + ":" + hoarse.getName() + "backup";
+                String backupValue = value;
+                jedis.set(backupKey,backupValue);
+
+                System.out.println("Value saved in Redis: " + value);
+                System.out.println(key);
+
+
+            } else {
+                System.out.println("옥션이 종료되었습니다 이후 값은 레디스 저장 안됨 ");
+                System.out.println("==========낙찰되었습니다 낙찰가 : "+ jedis.get(AUCTION_KEY + ":" +hoarse.getName()));
+                addChatMessage(message.getRoomId(), message.getSender(), message.getMessage()); // 값 저장
+                System.out.println("낙찰자:");
+
+            }
+//
+//            String key = AUCTION_KEY + ":" + hoarse.getName();
+//            jedis.set(key, value);
+//            String backupKey = AUCTION_KEY + ":" + hoarse.getName() + "backup";
+//            String backupValue = value;
+//            jedis.set(backupKey, backupValue);
+
+//            System.out.println("Value saved in Redis: " + value);
+//            System.out.println(key);
+        } catch (NumberFormatException e) {
+            System.out.println("Redis 연결 중 오류가 발생했습니다.");
+        }
+    }
+
+    public void addChatMessage(String roomId,String sender, String message) { // 낙찰 되었을때만 실행
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+
+            jedis.hset(roomId, sender, message);// hash에 저장,계속 덮어씌움
+        }
+    }
+
+
+
+
     // 값 비교 후 더 높은값 제시
 
     public void auctionCompare(AuctionMessage message) {
         try (Jedis jedis = new Jedis("localhost", 6379)) {
-            auctionInit();
 
             String backupKeyString = jedis.get("backupKey");
 
@@ -75,11 +141,11 @@ public class AuctionService {
         }
     }
 
-    public void saveChatMessage(String roomId, String message){
-        try (Jedis jedis = new Jedis("localhost", 6379)){
-            jedis.rpush(roomId, message);
-        }
-    }
+//    public void saveChatMessage(String roomId, String message){
+//        try (Jedis jedis = new Jedis("localhost", 6379)){
+//            jedis.rpush(roomId, message);
+//        }
+//    }
 
 //    public void auctionCompare(AuctionMessage message) {
 //        try (Jedis jedis = new Jedis("localhost", 6379)) {
@@ -153,42 +219,8 @@ public class AuctionService {
 //    }
 //
 
-    private void auction(String value, AuctionMessage message) {
 
-        AuctionRoom auctionRoom = auctionRoomRepository.findByRoomId(message.getRoomId());
-      System.out.println("경매룸 아이디:"+message.getRoomId());
 
-        if (auctionRoom == null) {
-            System.out.println("경매 방을 찾을 수 없습니다.");
-            return;
-        }
-
-        // redis에서 채팅방 리스트 만들기
-        addChatMessage(message.getRoomId(), message.getMessage());
-
-        Hoarse hoarse = auctionRoom.getHoarse();
-
-        try (Jedis jedis = new Jedis("localhost", 6379)) {
-            System.out.println("실행 분기 테스트");
-
-            String key = AUCTION_KEY + ":" + hoarse.getName();
-            jedis.set(key, value);
-            String backupKey = AUCTION_KEY + ":" + hoarse.getName() + "backup";
-            String backupValue = value;
-            jedis.set(backupKey, backupValue);
-
-            System.out.println("Value saved in Redis: " + value);
-            System.out.println(key);
-        } catch (NumberFormatException e) {
-            System.out.println("Redis 연결 중 오류가 발생했습니다.");
-        }
-    }
-
-    public void addChatMessage(String roomId, String message) {
-        try (Jedis jedis = new Jedis("localhost", 6379)) {
-            jedis.rpush(roomId, message); // 채팅 메시지를 해당 채팅방의 링크드 리스트에 추가
-        }
-    }
 
     public List<String> getChatMessages(String roomId, int start, int end) {
         try (Jedis jedis = new Jedis("localhost", 6379)) {
@@ -198,7 +230,7 @@ public class AuctionService {
     }
 
 
-
+//
 //    private void auction(String value, AuctionMessage message) {
 //        Optional<AuctionRoom> optionalAuctionRoom = auctionRoomRepository.findById(Long.valueOf(message.getRoomId()));
 //

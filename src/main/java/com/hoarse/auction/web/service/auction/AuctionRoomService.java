@@ -7,6 +7,7 @@ import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
 import java.util.*;
 
@@ -48,7 +49,9 @@ public class AuctionRoomService {
         auctionRoomRepository.save(auctionRoom);
         auctionRooms.put(auctionRoom.getRoomId(), auctionRoom);
         return auctionRoom;
+
     }
+
 
 
 }
