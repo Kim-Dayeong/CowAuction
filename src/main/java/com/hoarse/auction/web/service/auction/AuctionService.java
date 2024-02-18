@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
@@ -25,7 +27,8 @@ public class AuctionService {
 
     private final HoarseRepository hoarseRepository;
     private final AuctionRoomRepository auctionRoomRepository;
-//    private static final long AUCTION_DURATION = TimeUnit.MINUTES.toMillis(1); // 1분
+    private static final long AUCTION_DURATION = TimeUnit.MINUTES.toMillis(1); // 1분
+
 
     // 기본값 설정
     public void auctionInit(){
@@ -33,6 +36,10 @@ public class AuctionService {
         String key = "backupKey";
         String value = "300"; // 단위: 만원
         jedis.set(key,value);
+        String endtimeKey = "endtime";
+        long endtime = System.currentTimeMillis() + AUCTION_DURATION;
+        jedis.set(endtimeKey, String.valueOf(endtime));
+        jedis.close();
     }
 
     public AuctionService(HoarseRepository hoarseRepository, AuctionRoomRepository auctionRoomRepository) {
@@ -58,6 +65,7 @@ public class AuctionService {
             System.out.println("실행 분기 테스트");
 
             Long endTime = Long.parseLong(jedis.get("endTime"));
+
             if (System.currentTimeMillis() < endTime) {
 
                 // 비교값 저장
