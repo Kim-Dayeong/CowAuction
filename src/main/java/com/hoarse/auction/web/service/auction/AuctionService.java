@@ -71,19 +71,19 @@ public class AuctionService {
                 // 비교값 저장
                 String key = AUCTION_KEY + ":" + hoarse.getName() ;
                 jedis.set(key, value);
-                String backupKey = AUCTION_KEY + ":" + hoarse.getName() + "backup";
+//                String backupKey = AUCTION_KEY + ":" + hoarse.getName() + "backup";
+                String backupKey = "backupKey";
                 String backupValue = value;
                 jedis.set(backupKey,backupValue);
 
                 System.out.println("Value saved in Redis: " + value);
                 System.out.println(key);
-
+                addChatMessage(message.getRoomId(), message.getSender(), message.getMessage()); // 값 저장
 
             } else {
                 System.out.println("옥션이 종료되었습니다 이후 값은 레디스 저장 안됨 ");
-                System.out.println("==========낙찰되었습니다 낙찰가 : "+ jedis.get(AUCTION_KEY + ":" +hoarse.getName()));
-                addChatMessage(message.getRoomId(), message.getSender(), message.getMessage()); // 값 저장
-                System.out.println("낙찰자:");
+                System.out.println("==========낙찰되었습니다 낙찰정보 : "+ jedis.hgetAll(message.getRoomId()));
+
 
             }
 //
@@ -114,6 +114,8 @@ public class AuctionService {
 
     public void auctionCompare(AuctionMessage message) {
         try (Jedis jedis = new Jedis("localhost", 6379)) {
+
+            System.out.println("비교메서드!!!!!");
 
             String backupKeyString = jedis.get("backupKey");
 

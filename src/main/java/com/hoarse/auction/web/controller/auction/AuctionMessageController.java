@@ -33,6 +33,8 @@ public class AuctionMessageController {
 
         if(message.getMessage().equals("경매시작")){
             System.out.println("구문 이퀄 확인!!!");
+
+
             try (Jedis jedis = new Jedis("localhost", 6379)){
 
                 jedis.set("endTime",String.valueOf(System.currentTimeMillis()+auctionDuringtime));
