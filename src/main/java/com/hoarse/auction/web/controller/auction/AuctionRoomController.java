@@ -1,13 +1,17 @@
 package com.hoarse.auction.web.controller.auction;
 
+import com.hoarse.auction.web.config.jwt.JwtAuth;
+import com.hoarse.auction.web.config.jwt.JwtConfig;
 import com.hoarse.auction.web.entity.auction.AuctionRoom;
 import com.hoarse.auction.web.entity.chat.ChatRoom;
+import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.auction.AuctionRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -36,12 +40,23 @@ public class AuctionRoomController {
         System.out.println("아이디!!!!!"+hoarseId);
         return auctionRoomService.createRoom(name, hoarseId);
     }
+
+    @PostMapping("/jwttest")
+    public void test(Principal principal){
+        System.out.println("테스트!!!");
+        System.out.println(principal.getName()); // memberid 반환
+
+    }
     // 채팅방 입장 화면
     @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable String roomId) {
+    public String roomDetail(Model model, @PathVariable String roomId,
+                             @JwtAuth Member member) {
         model.addAttribute("roomId", roomId);
         //최초로 roomid 조회후 캐시 저장
 //        auctionRoomService.findRoom(roomId);
+
+        //jwt 토큰 검증
+
 
         return "/auction/roomdetail";
     }

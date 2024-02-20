@@ -5,6 +5,7 @@ import com.hoarse.auction.web.entity.auction.AuctionRoom;
 import com.hoarse.auction.web.entity.hoarse.Hoarse;
 import com.hoarse.auction.web.repository.Auction.AuctionRoomRepository;
 import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
+import com.hoarse.auction.web.repository.member.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -12,6 +13,7 @@ import redis.clients.jedis.Jedis;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang3.StringUtils.isNumeric;
@@ -27,6 +29,8 @@ public class AuctionService {
 
     private final HoarseRepository hoarseRepository;
     private final AuctionRoomRepository auctionRoomRepository;
+
+    private final MemberRepository memberRepository;
     private static final long AUCTION_DURATION = TimeUnit.MINUTES.toMillis(1); // 1분
 
 
@@ -42,9 +46,10 @@ public class AuctionService {
         jedis.close();
     }
 
-    public AuctionService(HoarseRepository hoarseRepository, AuctionRoomRepository auctionRoomRepository) {
+    public AuctionService(HoarseRepository hoarseRepository, AuctionRoomRepository auctionRoomRepository, MemberRepository memberRepository) {
         this.hoarseRepository = hoarseRepository;
         this.auctionRoomRepository = auctionRoomRepository;
+        this.memberRepository = memberRepository;
         auctionInit(); // 생성자에서 초기화 메서드 호출
     }
 
@@ -83,6 +88,18 @@ public class AuctionService {
             } else {
                 System.out.println("옥션이 종료되었습니다 이후 값은 레디스 저장 안됨 ");
                 System.out.println("==========낙찰되었습니다 낙찰정보 : "+ jedis.hgetAll(message.getRoomId()));
+                Set<String> ownerInfoSet = jedis.smembers(message.getRoomId());
+                String ownerName =null;
+
+                for (String element : ownerInfoSet) { // 첫번째 요소 낙찰자명 가져오기
+                    ownerName = element;
+                    break;
+                }
+
+                // 낙찰자 저장
+
+//                hoarse.setOwner(memberRepository.);
+               // hoarseRepository.save()
 
 
             }
