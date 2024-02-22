@@ -27,6 +27,8 @@ public class AuctionRoom implements Serializable {
     @JoinColumn(name = "hoarse_id") //단방향 일대일 매핑
     Hoarse hoarse;
 
+    private String sender;
+
 
 //    private Set<WebSocketSession> sessions = new HashSet<>();
 

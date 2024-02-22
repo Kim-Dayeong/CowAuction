@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
   <title>Websocket Chat</title>
   <meta charset="utf-8">
@@ -48,9 +48,9 @@
     el: '#app',
     data: {
       room_name : '',
-      hoarseId: '', // hoarseId 추가
-      auctionrooms: [
-      ]
+      hoarseId: '',
+      sender: '',
+      auctionrooms: []
     },
     created() {
       this.findAllRoom();
@@ -61,34 +61,43 @@
       },
       createRoom: function() {
         if("" === this.room_name) {
-          alert("방 제목을 입력해 주십시요.");
+          alert("방 제목을 입력해 주십시오.");
           return;
-        } else if ("" === this.hoarseId) { // hoarseId가 비어있는지 확인
-          alert("hoarseId를 입력해 주십시요.");
+        } else if ("" === this.hoarseId) {
+          alert("hoarseId를 입력해 주십시오.");
           return;
         } else {
           var params = new URLSearchParams();
           params.append("name",this.room_name);
-          params.append("hoarseId", this.hoarseId); // hoarseId 전달
+          params.append("hoarseId", this.hoarseId);
+          // JWT 토큰 없이 채팅방 생성 요청
           axios.post('/auction/room', params)
-                  .then(
-                          response => {
-                            alert(response.data.roomName+"방 개설에 성공하였습니다.")
-                            this.room_name = '';
-                            this.hoarseId = ''; // hoarseId 초기화
-                            this.findAllRoom();
-                          }
-                  )
-                  .catch( response => { alert("채팅방 개설에 실패하였습니다."); } );
+                  .then(response => {
+                    this.sender = response.data.sender;
+                    alert(response.data.roomName + "방 개설에 성공하였습니다.");
+                    this.room_name = '';
+                    this.hoarseId = '';
+                    this.findAllRoom();
+                  })
+                  .catch(response => { alert("채팅방 개설에 실패하였습니다."); });
         }
       },
       enterRoom: function(roomId) {
-        var sender = prompt('대화명을 입력해 주세요.');
-        if(sender !== "") {
-          localStorage.setItem('wsauction.sender',sender);
-          localStorage.setItem('wsauction.roomId',roomId);
-          location.href="/auction/room/enter/"+roomId;
+        // 채팅방 입장 시 JWT 토큰 입력 요구
+        var token = prompt("JWT 토큰을 입력하세요.");
+        if (!token) {
+          alert("토큰을 입력해 주세요.");
+          return;
         }
+        axios.get(`/auction/room/enter/${roomId}`, {headers: {'Authorization': 'Bearer ' + token}})
+                .then(response => {
+                  const sender = response.data;
+                  localStorage.setItem('wsauction.sender', sender);
+                  localStorage.setItem('wsauction.roomId', roomId);
+                  localStorage.setItem('sender', token);
+                  location.href = `/auction/room/enter/${roomId}`;
+                })
+                .catch(response => { alert("채팅방 입장에 실패하였습니다."); });
       }
     }
   });

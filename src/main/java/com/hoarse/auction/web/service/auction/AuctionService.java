@@ -80,7 +80,7 @@ public class AuctionService {
                 String backupKey = "backupKey";
                 String backupValue = value;
                 jedis.set(backupKey,backupValue);
-
+                System.out.println("sender:"+message.getSender());
                 System.out.println("Value saved in Redis: " + value);
                 System.out.println(key);
                 addChatMessage(message.getRoomId(), message.getSender(), message.getMessage()); // 값 저장

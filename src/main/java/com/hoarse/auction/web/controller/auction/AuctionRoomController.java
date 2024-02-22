@@ -1,12 +1,12 @@
 package com.hoarse.auction.web.controller.auction;
 
-import com.hoarse.auction.web.config.jwt.JwtAuth;
-import com.hoarse.auction.web.config.jwt.JwtConfig;
+
 import com.hoarse.auction.web.entity.auction.AuctionRoom;
-import com.hoarse.auction.web.entity.chat.ChatRoom;
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.auction.AuctionRoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +20,7 @@ import java.util.List;
 public class AuctionRoomController {
 
     private final AuctionRoomService auctionRoomService;
+
 
     // 채팅 리스트 화면
     @GetMapping("/room")
@@ -35,23 +36,29 @@ public class AuctionRoomController {
     // 채팅방 생성
     @PostMapping("/room")
     @ResponseBody
-    public AuctionRoom createRoom(@RequestParam String name, @RequestParam String hoarseId) {
+    public AuctionRoom createRoom(
+            @RequestParam String name,
+                                  @RequestParam String hoarseId) {
 
         System.out.println("아이디!!!!!"+hoarseId);
         return auctionRoomService.createRoom(name, hoarseId);
     }
 
-    @PostMapping("/jwttest")
-    public void test(Principal principal){
-        System.out.println("테스트!!!");
-        System.out.println(principal.getName()); // memberid 반환
+    @GetMapping("/login")
+    public String login(){
 
+        return "/login/login";
     }
+
+
     // 채팅방 입장 화면
     @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable String roomId,
-                             @JwtAuth Member member) {
+    public String roomDetail(Model model, @PathVariable String roomId, Principal principal) {
         model.addAttribute("roomId", roomId);
+//
+//        Member member = auctionRoomService.findMember(Long.valueOf(principal.getName()));
+
+
         //최초로 roomid 조회후 캐시 저장
 //        auctionRoomService.findRoom(roomId);
 
@@ -60,6 +67,17 @@ public class AuctionRoomController {
 
         return "/auction/roomdetail";
     }
+//    @PostMapping("/room/enter/{roomId}")
+//    public ResponseEntity<String> enterRoom(
+//            @PathVariable String roomId,
+//            @AuthenticationPrincipal Principal principal) {
+//        Member member = auctionRoomService.findMember(Long.valueOf(principal.getName()));
+//        String sender = member.getName();
+//
+//
+//        return ResponseEntity.ok().body(sender);
+//    }
+
     // 특정 채팅방 조회
     @GetMapping("/room/{roomId}")
     @ResponseBody

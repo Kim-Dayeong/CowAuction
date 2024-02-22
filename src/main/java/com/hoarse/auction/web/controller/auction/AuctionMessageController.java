@@ -9,6 +9,8 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
 
+import java.awt.print.PrinterGraphics;
+import java.security.Principal;
 import java.util.concurrent.TimeUnit;
 
 
@@ -22,9 +24,9 @@ public class AuctionMessageController {
 
 
     @MessageMapping("/auction/message")
-    public void enter(AuctionMessage message) {
+    public void enter(AuctionMessage message, Principal principal) {
         if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
-            message.setMessage(message.getSender() + "님이 입장하였습니다.");
+            message.setMessage(principal.getName() + "님이 입장하였습니다.");
 
         }
         // 채팅 저장

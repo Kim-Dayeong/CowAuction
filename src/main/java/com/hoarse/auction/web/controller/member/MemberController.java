@@ -38,6 +38,8 @@ public class MemberController {
         return jwtConfig.createToken(member.getUsername(), Arrays.asList(member.getRole().getValue()));
     }
 
+
+
     @GetMapping("/admin")
     @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
     public List<MemberDto> findAllUser() {
