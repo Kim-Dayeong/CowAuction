@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setting Authorization Header</title>
+</head>
+<body>
+<h1>테스트</h1>
+<div id="jwtTokenDisplay"></div> <!-- 수정: 토큰을 표시할 요소 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- 수정: axios 라이브러리 임포트 -->
+<script>
+    // localStorage에서 JWT 토큰을 가져와서 Authorization 헤더를 설정하는 JavaScript 코드
+    var token = localStorage.getItem('token');
+    if (token) {
+        // 토큰이 존재하면 헤더에 토큰을 포함시킴
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        console.log('Authorization header set:', axios.defaults.headers.common['Authorization']);
+        document.getElementById('jwtTokenDisplay').innerText = 'JWT Token: ' + token;
+        console.log('JWT token:', token);
+    } else {
+        console.error('JWT token not found in localStorage');
+    }
+
+    // 클라이언트에서 사용자 정보를 요청하는 함수
+    function getUserInfo() {
+        // 토큰이 로컬 스토리지에 있는지 확인
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('JWT 토큰이 없습니다.');
+            return;
+        }
+
+        // HTTP GET 요청 보내기
+        fetch('/api/member/info', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                // 응답을 JSON 형태로 파싱
+                return response.json();
+            })
+            .then(data => {
+                // 응답 데이터 사용
+                console.log('사용자 정보:', data);
+            })
+            .catch(error => {
+                // 에러 처리
+                console.error('사용자 정보를 가져오는 중 에러 발생:', error);
+            });
+    }
+
+    // 페이지 로드 시 사용자 정보 요청
+    getUserInfo();
+</script>
+</body>
+</html>

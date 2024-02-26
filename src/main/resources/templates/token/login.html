@@ -42,6 +42,7 @@
                   // 로그인 성공 시 서버에서 전달된 JWT 토큰을 저장하거나 사용
                   const token = response.data;
                   // 토큰을 저장하는 방법은 로컬 스토리지, 쿠키 등을 사용할 수 있습니다.
+                  console.log(token);
                   localStorage.setItem('token', token);
                   // 로그인 후 리다이렉트 또는 다른 작업 수행
                   window.location.href = '/auction/rooms';

@@ -24,9 +24,8 @@ public class AuctionMessageController {
 
 
     @MessageMapping("/auction/message")
-    public void enter(AuctionMessage message, Principal principal) {
+    public void enter(AuctionMessage message) {
         if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
-            message.setMessage(principal.getName() + "님이 입장하였습니다.");
 
         }
         // 채팅 저장
@@ -47,6 +46,7 @@ public class AuctionMessageController {
         sendingOperations.convertAndSend("/topic/auction/room/" + message.getRoomId(), message);
         // 값 비교
         auctionService.auctionCompare(message);
+
 
 
     }

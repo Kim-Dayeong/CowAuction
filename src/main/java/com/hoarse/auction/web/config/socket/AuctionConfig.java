@@ -1,5 +1,6 @@
 package com.hoarse.auction.web.config.socket;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -21,6 +22,7 @@ public class AuctionConfig  implements WebSocketMessageBrokerConfigurer {
 
         registry.setApplicationDestinationPrefixes("/app");
     }
+
 
 
 }

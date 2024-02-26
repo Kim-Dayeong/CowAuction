@@ -6,7 +6,9 @@ import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.auction.AuctionRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +49,12 @@ public class AuctionRoomController {
     @GetMapping("/login")
     public String login(){
 
-        return "/login/login";
+        return "/token/login";
+    }
+
+    @GetMapping("/token")
+    public String token(){
+        return "/token/tokentest";
     }
 
 
@@ -64,6 +71,9 @@ public class AuctionRoomController {
 
         //jwt 토큰 검증
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        System.out.println("토큰 추출!!!!!" + username);
 
         return "/auction/roomdetail";
     }

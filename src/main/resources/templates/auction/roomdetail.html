@@ -58,7 +58,8 @@
     },
     created() {
       this.roomId = localStorage.getItem('wsauction.roomId');
-      this.sender = localStorage.getItem('wsauction.sender');
+      this.sender = localStorage.getItem('principal');
+      // this.sender = localStorage.getItem('wsauction.sender');
       this.findRoom();
     },
     methods: {
