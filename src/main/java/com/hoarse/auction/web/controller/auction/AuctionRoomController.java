@@ -2,10 +2,8 @@ package com.hoarse.auction.web.controller.auction;
 
 
 import com.hoarse.auction.web.entity.auction.AuctionRoom;
-import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.auction.AuctionRoomService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -53,14 +50,27 @@ public class AuctionRoomController {
     }
 
     @GetMapping("/token")
-    public String token(){
-        return "/token/tokentest";
+    public String token(@AuthenticationPrincipal Long userId){
+
+        String token = userId.toString();
+
+
+        return token;
+    }
+
+    @GetMapping("/test")
+    public String test(){
+
+       String test = String.valueOf(SecurityContextHolder.getContext().getAuthentication());
+
+
+        return test;
     }
 
 
     // 채팅방 입장 화면
     @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable String roomId, Principal principal) {
+    public String roomDetail(Model model, @PathVariable String roomId) {
         model.addAttribute("roomId", roomId);
 //
 //        Member member = auctionRoomService.findMember(Long.valueOf(principal.getName()));
@@ -73,7 +83,7 @@ public class AuctionRoomController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        System.out.println("토큰 추출!!!!!" + username);
+       System.out.println("토큰 추출!!!!!" + username);
 
         return "/auction/roomdetail";
     }

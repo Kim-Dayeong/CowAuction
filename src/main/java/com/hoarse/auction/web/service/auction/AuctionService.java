@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 @Service
-//@AllArgsConstructor
+@AllArgsConstructor
 public class AuctionService {
 
 
@@ -46,12 +46,12 @@ public class AuctionService {
         jedis.close();
     }
 
-    public AuctionService(HoarseRepository hoarseRepository, AuctionRoomRepository auctionRoomRepository, MemberRepository memberRepository) {
-        this.hoarseRepository = hoarseRepository;
-        this.auctionRoomRepository = auctionRoomRepository;
-        this.memberRepository = memberRepository;
-        auctionInit(); // 생성자에서 초기화 메서드 호출
-    }
+//    public AuctionService(HoarseRepository hoarseRepository, AuctionRoomRepository auctionRoomRepository, MemberRepository memberRepository) {
+//        this.hoarseRepository = hoarseRepository;
+//        this.auctionRoomRepository = auctionRoomRepository;
+//        this.memberRepository = memberRepository;
+//        auctionInit(); // 생성자에서 초기화 메서드 호출
+//    }
 
 
     private void auction(String value, AuctionMessage message) {
@@ -99,7 +99,7 @@ public class AuctionService {
                 // 낙찰자 저장
 
 //                hoarse.setOwner(memberRepository.);
-               // hoarseRepository.save()
+                // hoarseRepository.save()
 
 
             }
@@ -291,8 +291,4 @@ public class AuctionService {
 //
 //            }
 //        }
-    }
-
-
-
-
+}

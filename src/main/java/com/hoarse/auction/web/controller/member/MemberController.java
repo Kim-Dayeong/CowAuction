@@ -56,16 +56,16 @@ public class MemberController {
         return memberService.createUser(memberRequest);
     }
 
-    @GetMapping("/test")
-    public String test(){
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-       ;SecurityContextHolder.getContext().getAuthentication().getName();
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String username = authentication.getName();
-
-        return username;
-    }
+//    @GetMapping("/test")
+//    public String test(){
+//
+//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//       ;SecurityContextHolder.getContext().getAuthentication().getName();
+////        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+////        String username = authentication.getName();
+//
+//        return username;
+//    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody MemberRequest memberRequest, HttpServletRequest request) {

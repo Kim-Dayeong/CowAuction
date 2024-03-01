@@ -49,7 +49,7 @@
     data: {
       room_name : '',
       hoarseId: '',
-      sender: '',
+      // sender: '',
       auctionrooms: []
     },
     created() {
@@ -70,10 +70,14 @@
           var params = new URLSearchParams();
           params.append("name",this.room_name);
           params.append("hoarseId", this.hoarseId);
-          // JWT 토큰 없이 채팅방 생성 요청
+
           axios.post('/auction/room', params)
                   .then(response => {
-                    this.sender = response.data.sender;
+                    // axios.get('/api/member/info', { headers: { 'Authorization': `Bearer ${token}` } })
+                    // .then(response => {
+                    //   this.sender = response.data;
+                    //   console.log("axios:"+response);
+                    })
                     alert(response.data.roomName + "방 개설에 성공하였습니다.");
                     this.room_name = '';
                     this.hoarseId = '';
@@ -83,21 +87,24 @@
         }
       },
       enterRoom: function(roomId) {
-        // 채팅방 입장 시 JWT 토큰 입력 요구
-        var token = prompt("JWT 토큰을 입력하세요.");
+
+        var token = localStorage.getItem('token');
         if (!token) {
-          alert("토큰을 입력해 주세요.");
+          alert("로그인 후 진행해주세요");
           return;
         }
-        axios.get(`/auction/room/enter/${roomId}`, {headers: {'Authorization': 'Bearer ' + token}})
+        axios.get(`/info`, {headers: {'Authorization': 'Bearer ' + token}})
                 .then(response => {
-                  const sender = response.data;
-                  localStorage.setItem('wsauction.sender', sender);
+                  const sender = response.data.name;
+                  const senderId = response.data.username;
+                  // localStorage.setItem('wsauction.sender', sender);
                   localStorage.setItem('wsauction.roomId', roomId);
-                  localStorage.setItem('sender', token);
+                  localStorage.setItem('sender', sender);
+                  localStorage.setItem('senderId', senderId);
                   location.href = `/auction/room/enter/${roomId}`;
                 })
-                .catch(response => { alert("채팅방 입장에 실패하였습니다."); });
+                .catch(response => { alert("채팅방 입장에 실패하였습니다.");
+                });
       }
     }
   });
