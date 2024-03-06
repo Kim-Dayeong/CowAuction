@@ -59,7 +59,7 @@ public class AuctionRoomService {
         Hoarse hoarse = hoarseRepository.findByuniqueNum(uniqueNum);
         AuctionRoom auctionRoom =AuctionRoom.create(name, hoarse);
 
-//        auctionRoomRepository.save(auctionRoom);
+        auctionRoomRepository.save(auctionRoom); // 채팅방 저장
         auctionRooms.put(auctionRoom.getRoomId(), auctionRoom);
         return auctionRoom;
 

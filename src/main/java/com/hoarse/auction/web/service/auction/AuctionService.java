@@ -96,6 +96,8 @@ public class AuctionService {
                     break;
                 }
 
+                System.out.println("낙찰자:"+ownerName);
+
                 // 낙찰자 저장
 
 //                hoarse.setOwner(memberRepository.);

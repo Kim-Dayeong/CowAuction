@@ -22,4 +22,6 @@ public class AuctionMessage {
     private String sender;
     //내용
     private String message;
+
+    private String username;
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class HoarseRequest {
+public class HoarseRequestDto {
     private String name;
     private String birth;
     private String furcolor;

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
   <title>Websocket Chat</title>
@@ -29,10 +29,13 @@
       <label class="input-group-text">hoarseId</label>
     </div>
     <input type="text" class="form-control" v-model="hoarseId">
-    <!-- -->
+
+
+
     <div class="input-group-append">
       <button class="btn btn-primary" type="button" @click="createRoom">채팅방 개설</button>
     </div>
+
   </div>
   <ul class="list-group">
     <li class="list-group-item list-group-item-action" v-for="item in auctionrooms" v-bind:key="item.roomId" v-on:click="enterRoom(item.roomId)">
@@ -49,7 +52,8 @@
     data: {
       room_name : '',
       hoarseId: '',
-      // sender: '',
+      userId:'',
+      nickname:'',
       auctionrooms: []
     },
     created() {
@@ -68,16 +72,11 @@
           return;
         } else {
           var params = new URLSearchParams();
-          params.append("name",this.room_name);
+          params.append("name", this.room_name);
           params.append("hoarseId", this.hoarseId);
 
           axios.post('/auction/room', params)
                   .then(response => {
-                    // axios.get('/api/member/info', { headers: { 'Authorization': `Bearer ${token}` } })
-                    // .then(response => {
-                    //   this.sender = response.data;
-                    //   console.log("axios:"+response);
-                    })
                     alert(response.data.roomName + "방 개설에 성공하였습니다.");
                     this.room_name = '';
                     this.hoarseId = '';
@@ -88,23 +87,11 @@
       },
       enterRoom: function(roomId) {
 
-        var token = localStorage.getItem('token');
-        if (!token) {
-          alert("로그인 후 진행해주세요");
-          return;
-        }
-        axios.get(`/info`, {headers: {'Authorization': 'Bearer ' + token}})
-                .then(response => {
-                  const sender = response.data.name;
-                  const senderId = response.data.username;
-                  // localStorage.setItem('wsauction.sender', sender);
-                  localStorage.setItem('wsauction.roomId', roomId);
-                  localStorage.setItem('sender', sender);
-                  localStorage.setItem('senderId', senderId);
-                  location.href = `/auction/room/enter/${roomId}`;
-                })
-                .catch(response => { alert("채팅방 입장에 실패하였습니다.");
-                });
+        var username = prompt("username을 입력해주세요");
+        var nickname = prompt("nickname을 입력해주세요");
+        localStorage.setItem('wschat.sender', nickname);
+        localStorage.setItem('wschat.username', username);
+        location.href="/auction/room/enter/"+roomId;
       }
     }
   });

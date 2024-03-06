@@ -5,7 +5,7 @@ import com.hoarse.auction.web.entity.member.Member;
 import lombok.Getter;
 
 @Getter
-public class HoarseResponseDTO {
+public class HoarseResponseDto {
 
     private Long id;
     private String name;
@@ -18,7 +18,7 @@ public class HoarseResponseDTO {
     private String uniqueNum;
 
 
-    public HoarseResponseDTO(Hoarse entity){
+    public HoarseResponseDto(Hoarse entity){
         this.id = entity.getId();
         this.name = entity.getName();
         this.birth = entity.getBirth();
