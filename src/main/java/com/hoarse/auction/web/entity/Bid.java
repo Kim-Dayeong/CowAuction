@@ -1,6 +1,6 @@
 package com.hoarse.auction.web.entity;
 
-import com.hoarse.auction.web.entity.hoarse.Hoarse;
+import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,7 +21,7 @@ public class Bid {
 
 
     @OneToOne
-    private Hoarse hoarse;
+    private Horse hoarse;
 
     @OneToOne
     private Member bidder; // 입찰자

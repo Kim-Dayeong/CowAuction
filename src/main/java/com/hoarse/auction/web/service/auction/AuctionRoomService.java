@@ -1,7 +1,7 @@
 package com.hoarse.auction.web.service.auction;
 
 import com.hoarse.auction.web.entity.auction.AuctionRoom;
-import com.hoarse.auction.web.entity.hoarse.Hoarse;
+import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.repository.Auction.AuctionRoomRepository;
 import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
@@ -10,9 +10,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
 
-import java.security.Principal;
 import java.util.*;
 
 @Service
@@ -56,7 +54,7 @@ public class AuctionRoomService {
 
     //채팅방 생성
     public AuctionRoom createRoom(String name, String uniqueNum) {
-        Hoarse hoarse = hoarseRepository.findByuniqueNum(uniqueNum);
+        Horse hoarse = hoarseRepository.findByuniqueNum(uniqueNum);
         AuctionRoom auctionRoom =AuctionRoom.create(name, hoarse);
 
         auctionRoomRepository.save(auctionRoom); // 채팅방 저장

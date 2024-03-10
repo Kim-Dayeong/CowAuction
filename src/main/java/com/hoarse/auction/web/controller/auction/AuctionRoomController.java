@@ -81,9 +81,9 @@ public class AuctionRoomController {
 
         //jwt 토큰 검증
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-       System.out.println("토큰 추출!!!!!" + username);
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = authentication.getName();
+//       System.out.println("토큰 추출!!!!!" + username);
 
         return "/auction/roomdetail";
     }

@@ -1,6 +1,5 @@
 package com.hoarse.auction.web.entity.chat;
 
-import com.hoarse.auction.web.entity.hoarse.Hoarse;
 import jakarta.persistence.*;
 import lombok.*;
 

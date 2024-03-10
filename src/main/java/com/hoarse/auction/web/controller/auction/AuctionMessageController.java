@@ -1,9 +1,13 @@
 package com.hoarse.auction.web.controller.auction;
 
+import com.hoarse.auction.web.config.jwt.JwtConfig;
 import com.hoarse.auction.web.entity.auction.AuctionMessage;
 import com.hoarse.auction.web.entity.chat.ChatMessage;
+import com.hoarse.auction.web.entity.member.Member;
+import com.hoarse.auction.web.repository.member.MemberRepository;
 import com.hoarse.auction.web.service.auction.AuctionService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.boot.model.source.internal.hbm.XmlElementMetadata;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +26,9 @@ public class AuctionMessageController {
 
     private static final long auctionDuringtime = TimeUnit.MINUTES.toMillis(1); // 1분
 
+    private final JwtConfig jwtConfig;
+    private final MemberRepository memberRepository;
+
 
     @MessageMapping("/auction/message")
     public void enter(AuctionMessage message) {
@@ -31,6 +38,12 @@ public class AuctionMessageController {
         // 채팅 저장
         // 일단 채팅 받아오기
         System.out.println(message.getMessage());
+
+        //토큰
+        String token = jwtConfig.getAuthentication(message.getJwt()).getName();
+        Member member = memberRepository.findById(Long.valueOf(token))
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버를 찾을 수 없습니다."));
+
 
         if(message.getMessage().equals("경매시작")){
             System.out.println("구문 이퀄 확인!!!");

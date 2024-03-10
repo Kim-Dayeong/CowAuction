@@ -60,6 +60,7 @@
       this.roomId = localStorage.getItem('wsauction.roomId');
       this.sender = localStorage.getItem('wschat.sender');
       this.username = localStorage.getItem('wschat.username');
+      this.token = localStorage.getItem('wschat.jwt');
       this.findRoom();
     },
     methods: {
@@ -67,7 +68,7 @@
         axios.get('/auction/room/'+this.roomId).then(response => { this.room = response.data; });
       },
       sendMessage: function() {
-        ws.send("/app/auction/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, sender:this.sender, senderId: this.senderId, username:this.username,message:this.message}));
+        ws.send("/app/auction/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, sender:this.sender, senderId: this.senderId, token: this.token ,username:this.username,message:this.message}));
         this.message = '';
       },
       recvMessage: function(recv) {

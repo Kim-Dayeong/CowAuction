@@ -1,15 +1,13 @@
-package com.hoarse.auction.web.entity.hoarse;
+package com.hoarse.auction.web.entity.horse;
 
 import com.hoarse.auction.web.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +15,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @Entity(name = "Hoarse")
-public class Hoarse {
+public class Horse {
 
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,12 +43,12 @@ public class Hoarse {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "father_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Hoarse father;
+    private Horse father;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mother_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Hoarse mother;
+    private Horse mother;
 
     @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "member_id", nullable = false)
@@ -63,13 +61,13 @@ public class Hoarse {
     private Member owner;
 
     @OneToMany(mappedBy = "mother", fetch = FetchType.LAZY)
-    private List<Hoarse> motherChildren = new ArrayList<>();
+    private List<Horse> motherChildren = new ArrayList<>();
 
     @OneToMany(mappedBy = "father", fetch = FetchType.LAZY)
-    private List<Hoarse> fatherChildren = new ArrayList<>();
+    private List<Horse> fatherChildren = new ArrayList<>();
 
     @Builder
-    private Hoarse(String name, String birth, String furcolor,Hoarse mother, Hoarse father
+    private Horse(String name, String birth, String furcolor, Horse mother, Horse father
     , Member owner, Member producer, String uniqueNum){
         this.name = name;
         this.birth = birth;

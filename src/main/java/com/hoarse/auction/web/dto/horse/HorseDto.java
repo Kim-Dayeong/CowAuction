@@ -1,6 +1,6 @@
-package com.hoarse.auction.web.dto.hoarse;
+package com.hoarse.auction.web.dto.horse;
 
-import com.hoarse.auction.web.entity.hoarse.Hoarse;
+import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.entity.member.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,21 +10,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class HoarseDto {
+public class HorseDto {
 
     private Long id;
     private String name;
     private String birth;
     private String furcolor;
     private Member owner;
-    private Hoarse mother;
-    private Hoarse father;
+    private Horse mother;
+    private Horse father;
     private Member producer;
     private String uniqueNum;
 
     @Builder
-    private HoarseDto(Long id, String name, String birth, String furcolor, Member owner,
-                      Hoarse mother, Hoarse father, Member producer, String uniqueNum){
+    private HorseDto(Long id, String name, String birth, String furcolor, Member owner,
+                     Horse mother, Horse father, Member producer, String uniqueNum){
         this.id = id;
         this.name = name;
         this.birth = birth;

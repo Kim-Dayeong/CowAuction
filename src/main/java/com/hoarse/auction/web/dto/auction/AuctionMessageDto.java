@@ -20,4 +20,5 @@ public class AuctionMessageDto {
     private Member sender;
     private String message;
     private String time;
+    private String jwt;
 }
