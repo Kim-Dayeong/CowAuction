@@ -25,5 +25,5 @@ public class AuctionMessage {
 
     private String username;
 
-    private String jwt;
+    private String token;
 }

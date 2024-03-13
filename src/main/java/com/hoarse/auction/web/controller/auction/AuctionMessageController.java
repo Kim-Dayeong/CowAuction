@@ -40,7 +40,7 @@ public class AuctionMessageController {
         System.out.println(message.getMessage());
 
         //토큰
-        String token = jwtConfig.getAuthentication(message.getJwt()).getName();
+        String token = jwtConfig.getAuthentication(message.getToken()).getName();
         Member member = memberRepository.findById(Long.valueOf(token))
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버를 찾을 수 없습니다."));
 

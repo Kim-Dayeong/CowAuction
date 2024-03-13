@@ -2,9 +2,11 @@ package com.hoarse.auction.web.controller.member;
 
 import com.hoarse.auction.web.config.jwt.JwtConfig;
 
+import com.hoarse.auction.web.config.security.SecurityUser;
 import com.hoarse.auction.web.dto.member.MemberDto;
 import com.hoarse.auction.web.dto.member.MemberRequest;
 
+import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.member.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -56,16 +58,7 @@ public class MemberController {
         return memberService.createUser(memberRequest);
     }
 
-//    @GetMapping("/test")
-//    public String test(){
-//
-//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//       ;SecurityContextHolder.getContext().getAuthentication().getName();
-////        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-////        String username = authentication.getName();
-//
-//        return username;
-//    }
+
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody MemberRequest memberRequest, HttpServletRequest request) {
@@ -76,11 +69,6 @@ public class MemberController {
         // 토큰을 응답으로 반환
         return ResponseEntity.ok(token);
     }
-//    public String login(@RequestBody MemberRequest memberRequest, HttpServletRequest request) {
-//        MemberDto member = memberService.findByEmailAndPassword(memberRequest.getUsername(), memberRequest.getPassword());
-//
-//        return jwtConfig.createToken(member.getUsername(), Arrays.asList(member.getRole().getValue()));
-//    }
 
 
 
@@ -99,6 +87,21 @@ public class MemberController {
     }
 
 
+    // 회원탈퇴
+//    @DeleteMapping("/delete/{memberId}")
+//    public ResponseEntity<?> deleteMember(@PathVariable("memberId") Long memberId,@AuthenticationPrincipal SecurityUser principal){
+//       memberService.deleteMember(memberId, principal.getMember());
+//
+//       return ResponseEntity.ok().build();
+//    }
+//
+//    //회원 수정
+//    @PutMapping("/update/{memberId}")
+//    public MemberDto updateMember(@ResponseBody MemberDto memberDto,
+//            @PathVariable("memberId") Long memberId,@AuthenticationPrincipal SecurityUser principal){
+//        return memberService.updateMember(memberId, memberDto, principal.getMember());
+//    }
 
+    // 회원 소유 말 정보
 
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/hoarse")
+@RequestMapping("/api/horse")
 @RequiredArgsConstructor
 public class HorseController {
 
@@ -34,7 +34,7 @@ public class HorseController {
     }
 
     // 말 정보 상세보기
-    @GetMapping("/read/{hoarseId}")
+    @GetMapping("/read/{horseId}")
     private HorseDto findHoarse(@PathVariable Long hoarseId){
         return horseService.findHoarse(hoarseId);
     }
@@ -53,7 +53,7 @@ public class HorseController {
 
 
     // 말 삭제
-    @DeleteMapping("/delete/{hoarseId}")
+    @DeleteMapping("/delete/{horseId}")
     public ResponseEntity<?> deleteHoarse(@PathVariable("hoarseId") Long hoarseId,
                                        @AuthenticationPrincipal SecurityUser principal){
         horseService.deleteHoarse(hoarseId, principal.getMember());
@@ -61,7 +61,7 @@ public class HorseController {
     }
 
     // 말 수정
-    @PutMapping("/update/{hoarseId}")
+    @PutMapping("/update/{horseId}")
     public HorseDto update(@PathVariable Long hoarseId, @RequestBody HorseRequestDto requestDto, @AuthenticationPrincipal SecurityUser principal){
 
         return horseService.updateHoarse(hoarseId, requestDto, principal.getMember());

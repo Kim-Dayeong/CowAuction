@@ -6,11 +6,13 @@ import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.repository.Auction.AuctionRoomRepository;
 import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
 import com.hoarse.auction.web.repository.member.MemberRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -43,8 +45,10 @@ public class AuctionService {
         jedis.set(endtimeKey, String.valueOf(endtime));
         jedis.close();
     }
-
-
+    @PostConstruct //bean 생성후 한번만 실행
+    public void init() {
+        auctionInit();
+    }
 
     private void auction(String value, AuctionMessage message) {
 
@@ -72,42 +76,41 @@ public class AuctionService {
                 String backupKey = "backupKey";
                 String backupValue = value;
                 jedis.set(backupKey,backupValue);
-                System.out.println("sender:"+message.getSender());
+                System.out.println("sender:"+message.getUsername());
                 System.out.println("Value saved in Redis: " + value);
                 System.out.println(key);
-                addChatMessage(message.getRoomId(), message.getSender(), message.getMessage()); // 값 저장
+                addChatMessage(message.getRoomId(), message.getUsername(), message.getMessage()); // 값 저장
 
             } else {
                 System.out.println("옥션이 종료되었습니다 이후 값은 레디스 저장 안됨 ");
                 System.out.println("==========낙찰되었습니다 낙찰정보 : "+ jedis.hgetAll(message.getRoomId()));
-                Set<String> ownerInfoSet = jedis.smembers(message.getRoomId());
-                String ownerName =null;
 
-                for (String element : ownerInfoSet) { // 첫번째 요소 낙찰자명 가져오기
-                    ownerName = element;
-                    break;
+
+                Map<String, String> ownerInfoMap = jedis.hgetAll(message.getRoomId());
+                String username = null;
+                String finalvalue = null;
+                // 모든 필드와 그에 해당하는 값 출력
+                for (Map.Entry<String, String> entry : ownerInfoMap.entrySet()) {
+                    username = entry.getKey();
+                   finalvalue = entry.getValue();
+                    System.out.println("낙찰자 아이디: " + username + ", 낙찰가: " + value);
+                    // 낙찰자 저장
+                    hoarse.setOwner(memberRepository.findById(Long.valueOf(username))
+                            .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버를 찾을 수 없습니다.")));
+                    hoarseRepository.save(hoarse);
                 }
-
-                System.out.println("낙찰자:"+ownerName);
-
-                // 낙찰자 저장
-
-                hoarse.setOwner(memberRepository.findById(Long.valueOf(message.getJwt()))
-                        .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버를 찾을 수 없습니다.")));
-                 hoarseRepository.save(hoarse);
-
 
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("Redis 연결 중 오류가 발생했습니다.");
+            System.out.println("Redis 연결 중 오류가 발생했습니다."+ e);
         }
     }
 
     public void addChatMessage(String roomId,String sender, String message) { // 낙찰 되었을때만 실행
         try (Jedis jedis = new Jedis("localhost", 6379)) {
 
-            jedis.hset(roomId, sender, message);// hash에 저장,계속 덮어씌움
+            jedis.hset(roomId, sender, message);// hash에 저장,계속 덮어씌움 키값:roomid
         }
     }
 
@@ -118,43 +121,30 @@ public class AuctionService {
 
     public void auctionCompare(AuctionMessage message) {
         try (Jedis jedis = new Jedis("localhost", 6379)) {
-
             System.out.println("비교메서드!!!!!");
 
-            String backupKeyString = jedis.get("backupKey");
+            long backupKey = 0;
+            long value = 0;
+                    String backupKeyString = jedis.get("backupKey");
 
             if (backupKeyString != null) {
                 try {
-                    long backupKey = Long.parseLong(backupKeyString);
+                    backupKey = Long.parseLong(backupKeyString);
+                   value = Long.parseLong(message.getMessage());
 
-                    // value 자료형 구분 후 long으로 변환
-                    if (isNumeric(message.getMessage())) {
-                        long value;
-                        try {
-                            value = Long.parseLong(message.getMessage());
-                        } catch (NumberFormatException e) {
-                            System.out.println("유효한 숫자가 아닙니다.");
-                            return; // 숫자가 아닌 경우 바로 메서드 종료
-                        }
-
-                        // backupkey와 key의 값 비교
-                        if (value > backupKey) {
-                            auction(String.valueOf(value), message);
-                        } else {
-                            System.out.println("이전값 보다 더 높은값을 제시해야 합니다.");
-                        }
+                    if (value > backupKey) {
+                        auction(String.valueOf(value), message);
                     } else {
-                        System.out.println("유효한 숫자가 아닙니다.");
+                        System.out.println("이전값 보다 더 높은값을 제시해야 합니다.");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("backupKey의 값이 유효한 숫자가 아닙니다.");
+                    System.out.println("유효한 숫자가 아닙니다.");
                 }
             } else {
                 System.out.println("backupKey의 값이 null입니다.");
             }
         }
     }
-
 
 
 

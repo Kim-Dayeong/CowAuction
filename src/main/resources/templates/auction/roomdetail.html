@@ -57,10 +57,10 @@
       messages: []
     },
     created() {
-      this.roomId = localStorage.getItem('wsauction.roomId');
+      this.roomId = localStorage.getItem('wschat.roomId');
       this.sender = localStorage.getItem('wschat.sender');
       this.username = localStorage.getItem('wschat.username');
-      this.token = localStorage.getItem('wschat.jwt');
+      this.token = localStorage.getItem('wschat.token');
       this.findRoom();
     },
     methods: {

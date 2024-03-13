@@ -89,10 +89,11 @@
 
         var username = prompt("username을 입력해주세요");
         var nickname = prompt("nickname을 입력해주세요");
-        var jwt = prompt("token을 입력해주세요");
+        var token = prompt("token을 입력해주세요");
+        localStorage.setItem("wschat.roomId", roomId);
         localStorage.setItem('wschat.sender', nickname);
         localStorage.setItem('wschat.username', username);
-        localStorage.setItem('wschat.jwt', jwt);
+        localStorage.setItem('wschat.token', token);
         location.href="/auction/room/enter/"+roomId;
       }
     }
