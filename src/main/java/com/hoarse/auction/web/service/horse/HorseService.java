@@ -34,7 +34,7 @@ public interface HorseService {
 
 
     // 말 삭제
-    void deleteHoarse(Long hoarseId, Member member);
+    void deleteHorse(Long hoarseId, Member member);
 
 
 }

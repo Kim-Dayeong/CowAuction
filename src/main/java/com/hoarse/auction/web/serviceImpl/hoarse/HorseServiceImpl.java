@@ -78,7 +78,7 @@ public class HorseServiceImpl implements HorseService {
     }
 
     @Override
-    public void deleteHoarse(Long hoarseId, Member member){
+    public void deleteHorse(Long hoarseId, Member member){
 
         Horse hoarse = hoarseRepository.findById(hoarseId).orElseThrow(()-> new EntityNotFoundException("말 정보를 찾을 수 없습니다."));
         if(!hoarse.getProducer().getUsername().equals(member.getUsername())) {
