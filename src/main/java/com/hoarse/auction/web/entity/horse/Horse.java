@@ -31,10 +31,6 @@ public class Horse {
     @Column(nullable = false)
     private String furcolor;
 
-    @Column
-    private Integer nearvalue; // 근친율
-
-    // 관심수 (경매 관심)
 
 
     @Column(unique = true, nullable = false)

@@ -7,17 +7,18 @@ import java.io.Serializable;
 import java.util.UUID;
 
 
-@Data
+
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class ChatRoom implements Serializable {
 
         private static final long serialVersionUID = 6494678977089006639L; // 수정
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String roomId;
+    private Long roomId;
 
     private String roomName;
 
@@ -27,7 +28,6 @@ public class ChatRoom implements Serializable {
 
     public static ChatRoom create(String name) {
         ChatRoom room = new ChatRoom();
-        room.roomId = UUID.randomUUID().toString();
         room.roomName = name;
         return room;
     }

@@ -3,6 +3,7 @@ package com.hoarse.auction.web.controller.member;
 import com.hoarse.auction.web.config.jwt.JwtConfig;
 
 import com.hoarse.auction.web.config.security.SecurityUser;
+import com.hoarse.auction.web.dto.member.updateResponseMemberDto;
 import com.hoarse.auction.web.dto.member.MemberDto;
 import com.hoarse.auction.web.dto.member.MemberRequestDto;
 
@@ -45,7 +46,6 @@ public class MemberController {
         return "토큰이 유효하지 않습니다";
 
     }
-
 
 
     @PostMapping("/signup")
@@ -91,12 +91,13 @@ public class MemberController {
     }
 
     //회원 수정
-    @PutMapping("/update/{memberId}")
-    public MemberDto updateMember(MemberRequestDto memberDto,
-            @PathVariable("memberId") Long memberId,@AuthenticationPrincipal SecurityUser principal){
-        return memberService.updateMember(memberId,memberDto, principal.getMember());
-    }
+//    @PutMapping("/update/{memberId}")
+//    public updateResponseMemberDto updateMember(MemberRequestDto memberDto,
+//            @PathVariable("memberId") Long memberId,@AuthenticationPrincipal SecurityUser principal){
+//         MemberDto updatemamber = memberService.updateMember(memberId,memberDto, principal.getMember());
+//        return new updateResponseMemberDto(updatemamber.getName(),updatemamber.getPhone(),updatemamber.getPassword());
+//    }
 
- 
+
 
 }

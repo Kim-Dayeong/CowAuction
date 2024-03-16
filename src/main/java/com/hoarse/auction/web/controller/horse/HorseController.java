@@ -56,7 +56,7 @@ public class HorseController {
     @DeleteMapping("/delete/{horseId}")
     public ResponseEntity<?> deleteHoarse(@PathVariable("hoarseId") Long hoarseId,
                                        @AuthenticationPrincipal SecurityUser principal){
-        horseService.deleteHoarse(hoarseId, principal.getMember());
+        horseService.deleteHorse(hoarseId, principal.getMember());
                 return ResponseEntity.ok().build();
     }
 
