@@ -1,6 +1,6 @@
 package com.hoarse.auction.web.entity.chat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.sql.Timestamp;
 
 
 @Getter
@@ -32,14 +34,7 @@ public class ChatMessage {
     private String sender;
     //내용
     private String message;
+    private Timestamp time;
 
-//    public static ChatMessage fromString(String jsonString) {
-//        try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            return objectMapper.readValue(jsonString, ChatMessage.class);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+
 }
