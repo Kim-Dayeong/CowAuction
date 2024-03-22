@@ -31,7 +31,7 @@ public class Horse {
     @Column(nullable = false)
     private String furcolor;
 
-
+    private Long bidPrice;
 
     @Column(unique = true, nullable = false)
     private String uniqueNum; // 고유 번호
@@ -64,7 +64,7 @@ public class Horse {
 
     @Builder
     private Horse(String name, String birth, String furcolor, Horse mother, Horse father
-    , Member owner, Member producer, String uniqueNum){
+    , Member owner, Member producer, String uniqueNum, Long bidPrice){
         this.name = name;
         this.birth = birth;
         this.furcolor = furcolor;
@@ -73,6 +73,7 @@ public class Horse {
         this.owner = owner;
         this.producer = producer;
         this.uniqueNum = uniqueNum;
+        this.bidPrice = bidPrice;
 
     }
 

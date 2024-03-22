@@ -37,7 +37,6 @@ public class ChatMessageController {
 
         return ResponseEntity.ok(chatMessageService.loadChat(roomId));
 
-
     }
 
     @MessageMapping("/chat/message")

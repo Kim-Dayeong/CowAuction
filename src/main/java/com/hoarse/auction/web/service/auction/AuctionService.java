@@ -97,6 +97,7 @@ public class AuctionService {
                     // 낙찰자 저장
                     hoarse.setOwner(memberRepository.findById(Long.valueOf(username))
                             .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버를 찾을 수 없습니다.")));
+                    hoarse.setBidPrice(Long.valueOf(value));
                     hoarseRepository.save(hoarse);
                 }
 
