@@ -3,6 +3,7 @@ package com.hoarse.auction.web.service.auction;
 import com.hoarse.auction.web.entity.auction.AuctionMessage;
 import com.hoarse.auction.web.entity.auction.AuctionRoom;
 import com.hoarse.auction.web.entity.horse.Horse;
+import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.repository.Auction.AuctionRoomRepository;
 import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
 import com.hoarse.auction.web.repository.member.MemberRepository;
@@ -93,13 +94,15 @@ public class AuctionService {
                 for (Map.Entry<String, String> entry : ownerInfoMap.entrySet()) {
                     username = entry.getKey();
                    finalvalue = entry.getValue();
-                    System.out.println("낙찰자 아이디: " + username + ", 낙찰가: " + value);
-                    // 낙찰자 저장
-                    hoarse.setOwner(memberRepository.findById(Long.valueOf(username))
-                            .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버를 찾을 수 없습니다.")));
-                    hoarse.setBidPrice(Long.valueOf(value));
-                    hoarseRepository.save(hoarse);
+
                 }
+                System.out.println("낙찰자 아이디: " + username + ", 낙찰가: " + finalvalue);
+                // 낙찰자 저장
+                Member owner = memberRepository.findById(Long.valueOf(username))
+                        .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버를 찾을 수 없습니다."));
+                hoarse.setOwner(owner);
+                hoarse.setBidPrice(Long.valueOf(finalvalue));
+                hoarseRepository.save(hoarse);
 
             }
 

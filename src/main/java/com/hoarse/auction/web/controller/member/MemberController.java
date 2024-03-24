@@ -7,6 +7,8 @@ import com.hoarse.auction.web.dto.member.updateResponseMemberDto;
 import com.hoarse.auction.web.dto.member.MemberDto;
 import com.hoarse.auction.web.dto.member.MemberRequestDto;
 
+import com.hoarse.auction.web.entity.member.Member;
+import com.hoarse.auction.web.service.auth.AuthService;
 import com.hoarse.auction.web.service.member.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.OK;
+
 @Slf4j
 @RestController
 @RequestMapping("api/member")
@@ -31,6 +36,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final JwtConfig jwtConfig;
+    private final AuthService authService;
 
     @GetMapping("/info")
     public String getMemberInfo(HttpServletRequest request){
@@ -73,13 +79,24 @@ public class MemberController {
         return memberService.findAll();
     }
 
+//    @GetMapping("/my")
+//    public ResponseEntity<Member> findUser(@RequestHeader(AUTHORIZATION)String token) {
+//        if (token == null) {
+//            throw new BadCredentialsException("회원 정보를 찾을 수 없습니다.(로그인 안됨)");
+//        }
+//        return ResponseEntity.status(OK).body(
+//                authService.getMemberFromToken(token));
+//    }
+
     @GetMapping("/my")
-    public MemberDto findUser(Authentication authentication) {
-        if (authentication == null) {
+    public String findUser(@RequestHeader(AUTHORIZATION)String token) {
+        if (token == null) {
             throw new BadCredentialsException("회원 정보를 찾을 수 없습니다.(로그인 안됨)");
         }
-        return memberService.findUser(authentication.getName());
+        String member = authService.getMemberFromToken(token).getUsername();
+        return member;
     }
+
 
 
     // 회원탈퇴
