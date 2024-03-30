@@ -8,6 +8,7 @@ import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
 import com.hoarse.auction.web.repository.member.MemberRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+
 public class AuctionRoomService {
 
     private final HoarseRepository hoarseRepository;

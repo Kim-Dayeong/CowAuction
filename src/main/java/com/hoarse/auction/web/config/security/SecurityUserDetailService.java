@@ -16,6 +16,7 @@ public class SecurityUserDetailService implements UserDetailsService {
     @Autowired
     private MemberRepository memberRepository;
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> optional = Optional.ofNullable(memberRepository.findByUsername(username));

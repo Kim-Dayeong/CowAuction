@@ -18,5 +18,5 @@ public interface MemberService {
 
     MemberDto updateMember(Long memberId, MemberRequestDto requestDto, Member member);
 
-   void deleteMember(Long memberId, Member member);
+   void deleteMember(String token);
 }

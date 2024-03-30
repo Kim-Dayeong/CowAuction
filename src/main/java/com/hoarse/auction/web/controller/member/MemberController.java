@@ -1,5 +1,6 @@
 package com.hoarse.auction.web.controller.member;
 
+import com.hoarse.auction.web.config.jwt.JwtAuthenticationFilter;
 import com.hoarse.auction.web.config.jwt.JwtConfig;
 
 import com.hoarse.auction.web.config.security.SecurityUser;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,24 +34,31 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("api/member")
 @RequiredArgsConstructor
+//@ComponentScan(basePackages = {"com.hoarse.auction.web.config.jwt"})
 public class MemberController {
 
     private final MemberService memberService;
-    private final JwtConfig jwtConfig;
+//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthService authService;
+    private final JwtConfig jwtConfig;
 
     @GetMapping("/info")
-    public String getMemberInfo(HttpServletRequest request){
+    public String getMemberInfo( @AuthenticationPrincipal SecurityUser principal){
 
-        String token = jwtConfig.resolveToken(request);
-
-        if(token != null && jwtConfig.validateToken(token)){
-            // 토큰이 유효하면
-            String username = jwtConfig.getAuthentication(token).getName();
-            return username;
+        if (principal != null) {
+            return "true:"+principal.getMember().getUsername();
         }
+        return "null";
 
-        return "토큰이 유효하지 않습니다";
+//        String token = jwtConfig.resolveToken(request);
+//
+//        if(token != null && jwtConfig.validateToken(token)){
+//            // 토큰이 유효하면
+//            String username = jwtConfig.getAuthentication(token).getName();
+//            return username;
+//        }
+//
+//        return "토큰이 유효하지 않습니다";
 
     }
 
@@ -100,9 +109,13 @@ public class MemberController {
 
 
     // 회원탈퇴
-    @DeleteMapping("/delete/{memberId}")
-    public ResponseEntity<?> deleteMember(@PathVariable("memberId") Long memberId,@AuthenticationPrincipal SecurityUser principal){
-       memberService.deleteMember(memberId, principal.getMember());
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteMember(@RequestHeader(AUTHORIZATION)String token){
+        if (token == null) {
+            throw new BadCredentialsException("회원 정보를 찾을 수 없습니다.(로그인 안됨)");
+        }
+
+       memberService.deleteMember(token);
 
        return ResponseEntity.ok().build();
     }
