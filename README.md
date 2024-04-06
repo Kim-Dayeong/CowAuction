@@ -1,4 +1,4 @@
-SpringBoot / JPA / Mysql / Redis / JWT / RestAPI / WebSocket
+SpringBoot / JPA / Mysql / Redis / JWT / RestAPI / WebSocket / Swagger 
 
 ![horseErd](https://github.com/Kim-Dayeong/HorseAuction/assets/114847045/15dec346-cfc1-4acc-80f1-3cc3c3f4f7f6)
 
