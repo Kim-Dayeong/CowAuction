@@ -3,6 +3,7 @@ package com.hoarse.auction.web.service.horse;
 import com.hoarse.auction.web.dto.horse.HorseDto;
 import com.hoarse.auction.web.dto.horse.HorseRequestDto;
 import com.hoarse.auction.web.dto.horse.HorseResponseDto;
+import com.hoarse.auction.web.dto.horse.HorseupdateDto;
 import com.hoarse.auction.web.entity.member.Member;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface HorseService {
 
 
     // 말 수정
-    HorseDto updateHoarse(Long hoarseId, HorseRequestDto requestDto, Member member);
+    HorseDto updateHoarse(Long hoarseId, HorseupdateDto requestDto, Member member);
 
     // 말 상세보기
     HorseDto findHoarse(Long hoarseId);

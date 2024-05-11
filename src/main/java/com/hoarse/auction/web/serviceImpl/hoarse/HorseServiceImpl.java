@@ -3,6 +3,7 @@ package com.hoarse.auction.web.serviceImpl.hoarse;
 import com.hoarse.auction.web.dto.horse.HorseDto;
 import com.hoarse.auction.web.dto.horse.HorseRequestDto;
 import com.hoarse.auction.web.dto.horse.HorseResponseDto;
+import com.hoarse.auction.web.dto.horse.HorseupdateDto;
 import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.module.RandomMaker;
@@ -47,7 +48,7 @@ public class HorseServiceImpl implements HorseService {
     }
     // 말 수정
     @Override
-    public HorseDto updateHoarse(Long hoarseId, HorseRequestDto requestDto, Member member) {
+    public HorseDto updateHoarse(Long hoarseId, HorseupdateDto requestDto, Member member) {
 
         Horse hoarse = hoarseRepository.findById(hoarseId).orElseThrow(()-> new EntityNotFoundException("말 정보를 찾을 수 없습니다."));
         if(!hoarse.getProducer().getUsername().equals(member.getUsername())){
@@ -59,7 +60,7 @@ public class HorseServiceImpl implements HorseService {
         hoarse.setFather(requestDto.getFather());
         hoarse.setMother(requestDto.getMother());
         hoarse.setName(requestDto.getName());
-        hoarse.setProducer(requestDto.getProducer());
+
         hoarse.setFurcolor(requestDto.getFurcolor());
         hoarseRepository.save(hoarse);
 
@@ -69,7 +70,6 @@ public class HorseServiceImpl implements HorseService {
                 .father(requestDto.getFather())
                 .mother(requestDto.getMother())
                 .name(requestDto.getName())
-                .producer(requestDto.getProducer())
                 .furcolor(requestDto.getFurcolor())
                 .build();
 

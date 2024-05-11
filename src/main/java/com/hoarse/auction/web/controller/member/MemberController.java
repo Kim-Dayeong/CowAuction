@@ -4,6 +4,7 @@ import com.hoarse.auction.web.config.jwt.JwtAuthenticationFilter;
 import com.hoarse.auction.web.config.jwt.JwtConfig;
 
 import com.hoarse.auction.web.config.security.SecurityUser;
+import com.hoarse.auction.web.dto.jwt.JwtResponseDTO;
 import com.hoarse.auction.web.dto.member.updateResponseMemberDto;
 import com.hoarse.auction.web.dto.member.MemberDto;
 import com.hoarse.auction.web.dto.member.MemberRequestDto;
@@ -71,13 +72,13 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody MemberRequestDto memberRequestDto, HttpServletRequest request) {
+    public ResponseEntity<JwtResponseDTO> login(@RequestBody MemberRequestDto memberRequestDto,JwtResponseDTO jwtResponseDTO) {
         // 사용자 정보 확인 및 토큰 생성
         MemberDto member = memberService.findByEmailAndPassword(memberRequestDto.getUsername(), memberRequestDto.getPassword());
-        String token = jwtConfig.createToken(member.getUsername(), Arrays.asList(member.getRole().getValue()));
+       jwtResponseDTO = jwtConfig.createToken(member.getUsername(), Arrays.asList(member.getRole().getValue()));
 
         // 토큰을 응답으로 반환
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(jwtResponseDTO);
     }
 
 
@@ -88,14 +89,7 @@ public class MemberController {
         return memberService.findAll();
     }
 
-//    @GetMapping("/my")
-//    public ResponseEntity<Member> findUser(@RequestHeader(AUTHORIZATION)String token) {
-//        if (token == null) {
-//            throw new BadCredentialsException("회원 정보를 찾을 수 없습니다.(로그인 안됨)");
-//        }
-//        return ResponseEntity.status(OK).body(
-//                authService.getMemberFromToken(token));
-//    }
+
 
     @GetMapping("/my")
     public String findUser(@RequestHeader(AUTHORIZATION)String token) {

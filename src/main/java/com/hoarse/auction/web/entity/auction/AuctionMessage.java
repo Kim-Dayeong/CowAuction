@@ -25,5 +25,5 @@ public class AuctionMessage {
 
     private String username;
 
-    private String token;
+    //private String token;
 }

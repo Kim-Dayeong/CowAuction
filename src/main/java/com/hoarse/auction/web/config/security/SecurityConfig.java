@@ -32,7 +32,7 @@ public class SecurityConfig {
     private final JwtConfig jwtConfig;
 
     private final SecurityUserDetailService userDetailService;
-    private final AuthenticationProvider authenticationProvider;
+//    private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -54,7 +54,6 @@ public class SecurityConfig {
                                         .requestMatchers("*/error/*").permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)   //  jwt 인증, jwttokenprovider 필터를 먼저 실행
 
 
@@ -62,10 +61,10 @@ public class SecurityConfig {
     }
 
 
-//    @Bean
-//    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 
 

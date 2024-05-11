@@ -2,6 +2,7 @@ package com.hoarse.auction.web.config.jwt;
 
 
 import com.hoarse.auction.web.config.security.SecurityUserDetailService;
+import com.hoarse.auction.web.dto.jwt.JwtResponseDTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -38,17 +39,28 @@ public class JwtConfig {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String userEmail, List<String> roleList) {
+    public JwtResponseDTO createToken(String userEmail, List<String> roleList) { //access token 생성
+
         Claims claims = Jwts.claims().setSubject(userEmail); // JWT payload 에 저장되는 정보단위
         claims.put("roles", roleList); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
-        return Jwts.builder()
+        String accessToken = Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + expireTime)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과
                 // signature 에 들어갈 secret값 세팅
                 .compact();
+
+        // refresh token 생성
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now.getTime() +expireTime ))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+        return JwtResponseDTO.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     // JWT 토큰에서 인증 정보 조회

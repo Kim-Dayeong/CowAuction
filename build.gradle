@@ -64,6 +64,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	implementation group: 'org.apache.poi', name: 'poi', version: '5.2.3'
 
 
 	// H2

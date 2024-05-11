@@ -4,6 +4,7 @@ import com.hoarse.auction.web.config.security.SecurityUser;
 import com.hoarse.auction.web.dto.horse.HorseDto;
 import com.hoarse.auction.web.dto.horse.HorseRequestDto;
 import com.hoarse.auction.web.dto.horse.HorseResponseDto;
+import com.hoarse.auction.web.dto.horse.HorseupdateDto;
 import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.service.horse.HorseService;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,8 @@ public class HorseController {
 
     // 말 정보 상세보기
     @GetMapping("/read/{horseId}")
-    private HorseDto findHoarse(@PathVariable Long hoarseId){
-        return horseService.findHoarse(hoarseId);
+    private HorseDto findHoarse(@PathVariable Long horseId){
+        return horseService.findHoarse(horseId);
     }
 
     // 말 이름으로 검색
@@ -54,17 +55,17 @@ public class HorseController {
 
     // 말 삭제
     @DeleteMapping("/delete/{horseId}")
-    public ResponseEntity<?> deleteHoarse(@PathVariable("hoarseId") Long hoarseId,
+    public ResponseEntity<?> deleteHoarse(@PathVariable("horseId") Long horseId,
                                        @AuthenticationPrincipal SecurityUser principal){
-        horseService.deleteHorse(hoarseId, principal.getMember());
-                return ResponseEntity.ok().build();
+        horseService.deleteHorse(horseId, principal.getMember());
+        return ResponseEntity.ok("말 정보가 성공적으로 삭제되었습니다.");
     }
 
     // 말 수정
     @PutMapping("/update/{horseId}")
-    public HorseDto update(@PathVariable Long hoarseId, @RequestBody HorseRequestDto requestDto, @AuthenticationPrincipal SecurityUser principal){
+    public HorseDto update(@PathVariable Long horseId, @RequestBody HorseupdateDto requestDto, @AuthenticationPrincipal SecurityUser principal){
 
-        return horseService.updateHoarse(hoarseId, requestDto, principal.getMember());
+        return horseService.updateHoarse(horseId, requestDto, principal.getMember());
     }
 
 }
