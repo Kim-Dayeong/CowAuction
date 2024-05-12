@@ -11,11 +11,19 @@ import com.hoarse.auction.web.dto.member.MemberRequestDto;
 
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.auth.AuthService;
+import com.hoarse.auction.web.service.horse.HorseService;
 import com.hoarse.auction.web.service.member.MemberService;
+import com.hoarse.auction.web.serviceImpl.hoarse.HorseServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +33,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,6 +51,7 @@ public class MemberController {
 //    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthService authService;
     private final JwtConfig jwtConfig;
+    private final HorseServiceImpl horseService;
 
     @GetMapping("/info")
     public String getMemberInfo( @AuthenticationPrincipal SecurityUser principal){
@@ -99,6 +109,52 @@ public class MemberController {
         String member = authService.getMemberFromToken(token).getUsername();
         return member;
     }
+
+    @GetMapping("/my/horse/exel")
+    public void horseExport(HttpServletResponse response) throws IOException {  //엑셀로 말 목록 내보내기
+
+
+        horseService.hoarseList();
+
+        Workbook wb = new XSSFWorkbook();
+
+        Sheet sheet = wb.createSheet("내 소유 말 목록");
+        Row row = null;
+        Cell cell = null;
+        int rowNum = 0;
+
+        // Header
+        row = sheet.createRow(rowNum++);
+        cell = row.createCell(0);
+        cell.setCellValue("번호");
+        cell = row.createCell(1);
+        cell.setCellValue("마 명");
+        cell = row.createCell(2);
+        cell.setCellValue("소유주");
+        cell.setCellValue("생산자");
+
+        // Body
+        for (int i=0; i<3; i++) {
+            row = sheet.createRow(rowNum++);
+            cell = row.createCell(0);
+            cell.setCellValue(i);
+            cell = row.createCell(1);
+            cell.setCellValue(i+"_name");
+            cell = row.createCell(2);
+            cell.setCellValue(i+"_title");
+        }
+
+        // 컨텐츠 타입과 파일명 지정
+        response.setContentType("ms-vnd/excel");
+//        response.setHeader("Content-Disposition", "attachment;filename=example.xls");
+        response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
+
+        // Excel File Output
+        wb.write(response.getOutputStream());
+        wb.close();
+    }
+
+
 
 
 
