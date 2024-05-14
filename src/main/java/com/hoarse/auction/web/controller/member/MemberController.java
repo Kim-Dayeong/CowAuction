@@ -4,6 +4,8 @@ import com.hoarse.auction.web.config.jwt.JwtAuthenticationFilter;
 import com.hoarse.auction.web.config.jwt.JwtConfig;
 
 import com.hoarse.auction.web.config.security.SecurityUser;
+import com.hoarse.auction.web.dto.horse.HorseRequestDto;
+import com.hoarse.auction.web.dto.horse.HorseResponseDto;
 import com.hoarse.auction.web.dto.jwt.JwtResponseDTO;
 import com.hoarse.auction.web.dto.member.updateResponseMemberDto;
 import com.hoarse.auction.web.dto.member.MemberDto;
@@ -19,10 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -114,7 +114,7 @@ public class MemberController {
     public void horseExport(HttpServletResponse response) throws IOException {  //엑셀로 말 목록 내보내기
 
 
-        horseService.hoarseList();
+        List<HorseResponseDto>  horseList =  horseService.hoarseList();
 
         Workbook wb = new XSSFWorkbook();
 
@@ -131,18 +131,37 @@ public class MemberController {
         cell.setCellValue("마 명");
         cell = row.createCell(2);
         cell.setCellValue("소유주");
+        cell = row.createCell(3);
         cell.setCellValue("생산자");
+        cell = row.createCell(4);
+        cell.setCellValue("고유번호");
+
 
         // Body
-        for (int i=0; i<3; i++) {
-            row = sheet.createRow(rowNum++);
-            cell = row.createCell(0);
+        for(int i=0; i<horseList.size(); i++){
+
+                row = sheet.createRow(rowNum++);
+                cell = row.createCell(0);
+                HorseResponseDto horse =  horseList.get(i);
             cell.setCellValue(i);
             cell = row.createCell(1);
-            cell.setCellValue(i+"_name");
+            cell.setCellValue(horse.getName());
             cell = row.createCell(2);
-            cell.setCellValue(i+"_title");
+            if(horse.getOwner() != null){
+                cell.setCellValue(String.valueOf(horse.getOwner().getName()));
+            }
+            cell.setCellValue("");
+            cell = row.createCell(3);
+            if(horse.getProducer() != null){
+                cell.setCellValue(String.valueOf(horse.getProducer().getName()));
+            }
+            cell.setCellValue("");
+
+            cell = row.createCell(4);
+            cell.setCellValue(String.valueOf(horse.getUniqueNum()));
+
         }
+
 
         // 컨텐츠 타입과 파일명 지정
         response.setContentType("ms-vnd/excel");
