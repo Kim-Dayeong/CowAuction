@@ -3,6 +3,8 @@ package com.hoarse.auction.web.controller.auction;
 
 import com.hoarse.auction.web.entity.auction.AuctionRoom;
 import com.hoarse.auction.web.service.auction.AuctionRoomService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,23 +18,28 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/auction")
+@Tag(name = "경매방 API")
 public class AuctionRoomController {
 
     private final AuctionRoomService auctionRoomService;
 
 
-    // 채팅 리스트 화면
+    @Operation(summary = "경매 리스트 화면 API")
     @GetMapping("/room")
     public String rooms(Model model) {
         return "/auction/room";
     }
-    // 모든 채팅방 목록 반환
+
+
+    @Operation(summary = "모든 경매방 리스트 API")
     @GetMapping("/rooms")
     @ResponseBody
     public List<AuctionRoom> room() {
         return auctionRoomService.findAllRoom();
     }
-    // 채팅방 생성
+
+
+    @Operation(summary = "경매방 생성 API")
     @PostMapping("/room")
     @ResponseBody
     public AuctionRoom createRoom(
@@ -43,24 +50,7 @@ public class AuctionRoomController {
         return auctionRoomService.createRoom(name, hoarseId);
     }
 
-    @GetMapping("/login")
-    public String login(){
-
-        return "/token/login";
-    }
-
-    @GetMapping("/token")
-    public String token(@AuthenticationPrincipal Long userId){
-
-        String token = userId.toString();
-
-
-        return token;
-    }
-
-
-
-    // 채팅방 입장 화면
+    @Operation(summary = "경매방 입장 API")
     @GetMapping("/room/enter/{roomId}")
     public String roomDetail(Model model, @PathVariable String roomId) {
         model.addAttribute("roomId", roomId);
@@ -69,10 +59,12 @@ public class AuctionRoomController {
         return "/auction/roomdetail";
     }
 
-    // 특정 채팅방 조회
+    @Operation(summary = "특정 경매방 조회 API")
     @GetMapping("/room/{roomId}")
     @ResponseBody
     public AuctionRoom roomInfo(@PathVariable String roomId) {
         return auctionRoomService.findById(roomId);
     }
 }
+
+

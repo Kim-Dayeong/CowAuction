@@ -11,10 +11,8 @@ public class RandomMaker {
 
         Random random = new Random();
         int randomIndex = random.nextInt(charArray.length);
-        //String randomElement = charArray[randomIndex];
 
         double randomValue = Math.random();
-        //  int intValue = (int) (randomValue * 100000);
 
 
         return charArray[randomIndex] + (int) (randomValue * 100000);

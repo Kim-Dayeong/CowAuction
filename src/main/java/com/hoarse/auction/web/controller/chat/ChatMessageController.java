@@ -6,6 +6,8 @@ import com.hoarse.auction.web.dto.chat.ChatMessageDto;
 import com.hoarse.auction.web.entity.chat.ChatMessage;
 import com.hoarse.auction.web.repository.chat.ChatMessageRepository;
 import com.hoarse.auction.web.service.chat.ChatMessageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -25,6 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "채팅 메시지 API")
 public class ChatMessageController {
 
     private final SimpMessageSendingOperations sendingOperations;
@@ -32,6 +35,7 @@ public class ChatMessageController {
 
     private final ChatMessageService chatMessageService;
 
+    @Operation(summary = "채팅 내역 조회 API")
     @GetMapping("api/chat/message/{roomId}") // 대화 내역 조회
     public ResponseEntity<List<ChatMessageDto>> roomMessage(@PathVariable String roomId) {
 
@@ -39,6 +43,7 @@ public class ChatMessageController {
 
     }
 
+    @Operation(summary = "채팅 전송 API")
     @MessageMapping("/chat/message")
     public void enter(ChatMessage message) {
         if (ChatMessage.MessageType.ENTER.equals(message.getType())) {

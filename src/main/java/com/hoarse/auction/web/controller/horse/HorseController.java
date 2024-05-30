@@ -7,6 +7,8 @@ import com.hoarse.auction.web.dto.horse.HorseResponseDto;
 import com.hoarse.auction.web.dto.horse.HorseupdateDto;
 import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.service.horse.HorseService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,30 +19,32 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/horse")
 @RequiredArgsConstructor
+@Tag(name = "말 API")
 public class HorseController {
 
     private final HorseService horseService;
 
-    // 말 등록
+    @Operation(summary = "말 등록 API")
+
     @PostMapping("/create")
     public HorseDto registerHoarse(@RequestBody HorseRequestDto hoarseRequest){
 
         return horseService.registerHoarse(hoarseRequest);
     }
 
-    // 말 리스트 (전체보기)
+    @Operation(summary = "말 전체 리스트 API")
     @GetMapping("/list")
     public List<HorseResponseDto> list(){
         return horseService.hoarseList();
     }
 
-    // 말 정보 상세보기
+    @Operation(summary = "말 정보 상세보기 API")
     @GetMapping("/read/{horseId}")
     private HorseDto findHoarse(@PathVariable Long horseId){
         return horseService.findHoarse(horseId);
     }
 
-    // 말 이름으로 검색
+    @Operation(summary = "말 이름으로 검색 API")
     @GetMapping("/search/{name}")
     private HorseDto searchHoarse(@PathVariable String name){
         return horseService.findHoarsename(name);
@@ -53,7 +57,7 @@ public class HorseController {
     // 생산자명으로 말 검색
 
 
-    // 말 삭제
+    @Operation(summary = "말 삭제 API")
     @DeleteMapping("/delete/{horseId}")
     public ResponseEntity<?> deleteHoarse(@PathVariable("horseId") Long horseId,
                                        @AuthenticationPrincipal SecurityUser principal){
@@ -61,7 +65,7 @@ public class HorseController {
         return ResponseEntity.ok("말 정보가 성공적으로 삭제되었습니다.");
     }
 
-    // 말 수정
+    @Operation(summary = "말 수정 API")
     @PutMapping("/update/{horseId}")
     public HorseDto update(@PathVariable Long horseId, @RequestBody HorseupdateDto requestDto, @AuthenticationPrincipal SecurityUser principal){
 

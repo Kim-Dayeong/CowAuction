@@ -16,6 +16,8 @@ import com.hoarse.auction.web.service.auth.AuthService;
 import com.hoarse.auction.web.service.horse.HorseService;
 import com.hoarse.auction.web.service.member.MemberService;
 import com.hoarse.auction.web.serviceImpl.hoarse.HorseServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -44,43 +46,24 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("api/member")
 @RequiredArgsConstructor
+@Tag(name = "회원 API")
 //@ComponentScan(basePackages = {"com.hoarse.auction.web.config.jwt"})
 public class MemberController {
 
     private final MemberService memberService;
-//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthService authService;
     private final JwtConfig jwtConfig;
     private final HorseServiceImpl horseService;
 
-    @GetMapping("/info")
-    public String getMemberInfo( @AuthenticationPrincipal SecurityUser principal){
 
-        if (principal != null) {
-            return "true:"+principal.getMember().getUsername();
-        }
-        return "null";
-
-//        String token = jwtConfig.resolveToken(request);
-//
-//        if(token != null && jwtConfig.validateToken(token)){
-//            // 토큰이 유효하면
-//            String username = jwtConfig.getAuthentication(token).getName();
-//            return username;
-//        }
-//
-//        return "토큰이 유효하지 않습니다";
-
-    }
-
-
+    @Operation(summary = "회원가입 API")
     @PostMapping("/signup")
     public MemberDto createUser(@RequestBody MemberRequestDto memberRequestDto) {
         return memberService.createUser(memberRequestDto);
     }
 
 
-
+    @Operation(summary = "로그인 API")
     @PostMapping("/login")
     public ResponseEntity<JwtResponseDTO> login(@RequestBody MemberRequestDto memberRequestDto,JwtResponseDTO jwtResponseDTO) {
         // 사용자 정보 확인 및 토큰 생성
@@ -92,7 +75,7 @@ public class MemberController {
     }
 
 
-
+    @Operation(summary = "어드민 - 모든 회원 조회 API")
     @GetMapping("/admin")
     @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
     public List<MemberDto> findAllUser() {
@@ -100,7 +83,7 @@ public class MemberController {
     }
 
 
-
+    @Operation(summary = "로그인 회원 정보 API")
     @GetMapping("/my")
     public String findUser(@RequestHeader(AUTHORIZATION)String token) {
         if (token == null) {
@@ -110,9 +93,9 @@ public class MemberController {
         return member;
     }
 
+    @Operation(summary = "회원 소유 말목록 엑셀 내보내기 API")
     @GetMapping("/my/horse/exel")
     public void horseExport(HttpServletResponse response) throws IOException {  //엑셀로 말 목록 내보내기
-
 
         List<HorseResponseDto>  horseList =  horseService.hoarseList();
 
@@ -162,7 +145,6 @@ public class MemberController {
 
         }
 
-
         // 컨텐츠 타입과 파일명 지정
         response.setContentType("ms-vnd/excel");
 //        response.setHeader("Content-Disposition", "attachment;filename=example.xls");
@@ -175,9 +157,7 @@ public class MemberController {
 
 
 
-
-
-    // 회원탈퇴
+    @Operation(summary = "회원 탈퇴 API")
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteMember(@RequestHeader(AUTHORIZATION)String token){
         if (token == null) {
@@ -196,6 +176,7 @@ public class MemberController {
 //         MemberDto updatemamber = memberService.updateMember(memberId,memberDto, principal.getMember());
 //        return new updateResponseMemberDto(updatemamber.getName(),updatemamber.getPhone(),updatemamber.getPassword());
 //    }
+
 
 
 

@@ -6,6 +6,8 @@ import com.hoarse.auction.web.entity.chat.ChatMessage;
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.repository.member.MemberRepository;
 import com.hoarse.auction.web.service.auction.AuctionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.model.source.internal.hbm.XmlElementMetadata;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "경매 API")
 public class AuctionMessageController {
     private final SimpMessageSendingOperations sendingOperations;
     private final AuctionService auctionService;
@@ -31,6 +34,7 @@ public class AuctionMessageController {
 
 
     @MessageMapping("/auction/message")
+    @Operation(summary = "경매 진행 API")
     public void enter(AuctionMessage message) {
         if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
 
@@ -59,7 +63,6 @@ public class AuctionMessageController {
         sendingOperations.convertAndSend("/topic/auction/room/" + message.getRoomId(), message);
         // 값 비교
         auctionService.auctionCompare(message);
-
 
 
     }
