@@ -9,6 +9,7 @@ import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
 import com.hoarse.auction.web.repository.member.MemberRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
@@ -23,8 +24,6 @@ import static org.apache.commons.lang3.StringUtils.isNumeric;
 @AllArgsConstructor
 public class AuctionService {
 
-
-
     private static final String AUCTION_KEY = "auction";
     private static final String CHAT_KEY_PREFIX = "";
 
@@ -33,6 +32,14 @@ public class AuctionService {
 
     private final MemberRepository memberRepository;
     private static final long AUCTION_DURATION = TimeUnit.MINUTES.toMillis(1); // 1분
+
+    @Value("${spring.redis.host}")
+    private String REDIS_HOST;
+
+    @Value("${redis.port}")
+    private int REDIS_PORT;
+
+
 
 
     // 기본값 설정
@@ -63,7 +70,7 @@ public class AuctionService {
 
         Horse hoarse = auctionRoom.getHoarse();
 
-        try (Jedis jedis = new Jedis("localhost", 6379)) {
+        try (Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT)) {
             System.out.println("실행 분기 테스트");
 
             Long endTime = Long.parseLong(jedis.get("endTime"));
@@ -73,7 +80,6 @@ public class AuctionService {
                 // 비교값 저장
                 String key = AUCTION_KEY + ":" + hoarse.getName() ;
                 jedis.set(key, value);
-//                String backupKey = AUCTION_KEY + ":" + hoarse.getName() + "backup";
                 String backupKey = "backupKey";
                 String backupValue = value;
                 jedis.set(backupKey,backupValue);
@@ -112,19 +118,17 @@ public class AuctionService {
     }
 
     public void addChatMessage(String roomId,String sender, String message) { // 낙찰 되었을때만 실행
-        try (Jedis jedis = new Jedis("localhost", 6379)) {
+        try (Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT)) {
 
             jedis.hset(roomId, sender, message);// hash에 저장,계속 덮어씌움 키값:roomid
         }
     }
 
 
-
-
     // 값 비교 후 더 높은값 제시
 
     public void auctionCompare(AuctionMessage message) {
-        try (Jedis jedis = new Jedis("localhost", 6379)) {
+        try (Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT)) {
             System.out.println("비교메서드!!!!!");
 
             long backupKey = 0;
@@ -153,7 +157,7 @@ public class AuctionService {
 
 
     public List<String> getChatMessages(String roomId, int start, int end) {
-        try (Jedis jedis = new Jedis("localhost", 6379)) {
+        try (Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT)) {
             String roomKey = roomId;
             return jedis.lrange(roomKey, start, end); // 지정된 범위의 채팅 메시지 가져오기
         }

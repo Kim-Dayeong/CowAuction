@@ -55,6 +55,17 @@ public class MemberController {
     private final JwtConfig jwtConfig;
     private final HorseServiceImpl horseService;
 
+    @GetMapping("/info")
+    public String getMemberInfo( @AuthenticationPrincipal SecurityUser principal){
+
+        if (principal != null) {
+            return "true:"+principal.getMember().getUsername();
+        }
+        return "null";
+
+
+
+    }
 
     @Operation(summary = "회원가입 API")
     @PostMapping("/signup")
@@ -75,12 +86,16 @@ public class MemberController {
     }
 
 
+
+
     @Operation(summary = "어드민 - 모든 회원 조회 API")
     @GetMapping("/admin")
     @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
     public List<MemberDto> findAllUser() {
         return memberService.findAll();
     }
+
+
 
 
     @Operation(summary = "로그인 회원 정보 API")
@@ -93,9 +108,11 @@ public class MemberController {
         return member;
     }
 
+
     @Operation(summary = "회원 소유 말목록 엑셀 내보내기 API")
     @GetMapping("/my/horse/exel")
     public void horseExport(HttpServletResponse response) throws IOException {  //엑셀로 말 목록 내보내기
+
 
         List<HorseResponseDto>  horseList =  horseService.hoarseList();
 
@@ -145,6 +162,7 @@ public class MemberController {
 
         }
 
+
         // 컨텐츠 타입과 파일명 지정
         response.setContentType("ms-vnd/excel");
 //        response.setHeader("Content-Disposition", "attachment;filename=example.xls");
@@ -157,6 +175,9 @@ public class MemberController {
 
 
 
+
+
+    // 회원탈퇴
     @Operation(summary = "회원 탈퇴 API")
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteMember(@RequestHeader(AUTHORIZATION)String token){
@@ -176,7 +197,6 @@ public class MemberController {
 //         MemberDto updatemamber = memberService.updateMember(memberId,memberDto, principal.getMember());
 //        return new updateResponseMemberDto(updatemamber.getName(),updatemamber.getPhone(),updatemamber.getPassword());
 //    }
-
 
 
 

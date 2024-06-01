@@ -37,10 +37,8 @@ public class AuctionMessageController {
     @Operation(summary = "경매 진행 API")
     public void enter(AuctionMessage message) {
         if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
-
+            message.setMessage(message.getUsername()+ "님이 입장하셨습니다.");
         }
-        // 채팅 저장
-        // 일단 채팅 받아오기
         System.out.println(message.getMessage());
 
         //토큰
@@ -48,23 +46,22 @@ public class AuctionMessageController {
        // Member member = memberRepository.findById(Long.valueOf(token))
         //        .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버를 찾을 수 없습니다."));
 
-
         if(message.getMessage().equals("경매시작")){
-            System.out.println("구문 이퀄 확인!!!");
-
-
-            try (Jedis jedis = new Jedis("localhost", 6379)){
-
-                jedis.set("endTime",String.valueOf(System.currentTimeMillis()+auctionDuringtime));
-
-            }
+            handleAuctionStart(message);
         }
-
         sendingOperations.convertAndSend("/topic/auction/room/" + message.getRoomId(), message);
         // 값 비교
         auctionService.auctionCompare(message);
 
+    }
 
+
+    private void handleAuctionStart(AuctionMessage message){
+        System.out.println("구문 이퀄 확인!!!");
+        try (Jedis jedis = new Jedis("localhost", 6379)){
+            jedis.set("endTime",String.valueOf(System.currentTimeMillis()+auctionDuringtime));
+
+        }
     }
 
 }

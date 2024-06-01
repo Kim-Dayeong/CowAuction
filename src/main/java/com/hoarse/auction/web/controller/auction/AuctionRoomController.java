@@ -55,7 +55,6 @@ public class AuctionRoomController {
     public String roomDetail(Model model, @PathVariable String roomId) {
         model.addAttribute("roomId", roomId);
 
-
         return "/auction/roomdetail";
     }
 

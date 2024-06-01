@@ -8,6 +8,9 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -18,9 +21,7 @@ public class RedisConfig {
 
     @Value("${redis.port}")
     private int port;
-//
-//    @Value("${spring.data.redis.password}")
-//    private String password;
+
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -38,39 +39,26 @@ public class RedisConfig {
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
     }
-}
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.data.redis.connection.RedisConnectionFactory;
-//import org.springframework.data.redis.core.RedisTemplate;
-//import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-//import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-//import org.springframework.data.redis.serializer.StringRedisSerializer;
-//
-//
-//@Configuration
-//public class RedisConfig {
-//
-//    /**
-//     * redis pub/sub 메시지를 처리하는 listener 설정
-//     */
+
+//    //리스너 어댑터 설정
 //    @Bean
-//    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory) {
+//    MessageListenerAdapter messageListenerAdapter() {
+//        return new MessageListenerAdapter(new RedisSubService());
+//    }
+//
+//    //컨테이너 설정
+//    @Bean
+//    RedisMessageListenerContainer redisContainer() {
 //        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(connectionFactory);
+//        container.setConnectionFactory(redisConnectionFactory());
+//        container.addMessageListener(messageListenerAdapter(), topic());
 //        return container;
 //    }
 //
-//    /**
-//     * 어플리케이션에서 사용할 redisTemplate 설정
-//     */
+//    //pub/sub 토픽 설정
 //    @Bean
-//    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-//        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setConnectionFactory(connectionFactory);
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
-//        return redisTemplate;
+//    ChannelTopic topic() {
+//        return new ChannelTopic("topic1");
 //    }
-//}
+}
+
