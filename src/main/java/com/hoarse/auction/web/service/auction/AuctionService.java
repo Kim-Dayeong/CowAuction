@@ -12,6 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +28,6 @@ import static org.apache.commons.lang3.StringUtils.isNumeric;
 public class AuctionService {
 
     private static final String AUCTION_KEY = "auction";
-    private static final String CHAT_KEY_PREFIX = "";
 
     private final HoarseRepository hoarseRepository;
     private final AuctionRoomRepository auctionRoomRepository;
@@ -39,12 +41,13 @@ public class AuctionService {
     @Value("${redis.port}")
     private int REDIS_PORT;
 
+    private static final Logger logger = LoggerFactory.getLogger(AuctionService.class);
 
 
 
     // 기본값 설정
     public void auctionInit(){
-        Jedis jedis = new Jedis("localhost", 6379);
+        Jedis jedis = getJedis();
         String key = "backupKey";
         String value = "300"; // 단위: 만원
         jedis.set(key,value);
@@ -64,13 +67,13 @@ public class AuctionService {
         System.out.println("경매룸 아이디:"+message.getRoomId());
 
         if (auctionRoom == null) {
-            System.out.println("경매 방을 찾을 수 없습니다.");
+            logger.error("경매 방을 찾을 수 없습니다.");
             return;
         }
 
         Horse hoarse = auctionRoom.getHoarse();
 
-        try (Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT)) {
+        try (Jedis jedis = getJedis()) {
             System.out.println("실행 분기 테스트");
 
             Long endTime = Long.parseLong(jedis.get("endTime"));
@@ -113,12 +116,12 @@ public class AuctionService {
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("Redis 연결 중 오류가 발생했습니다."+ e);
+            logger.error("Redis 연결 중 오류가 발생했습니다."+ e);
         }
     }
 
     public void addChatMessage(String roomId,String sender, String message) { // 낙찰 되었을때만 실행
-        try (Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT)) {
+        try (Jedis jedis = getJedis()) {
 
             jedis.hset(roomId, sender, message);// hash에 저장,계속 덮어씌움 키값:roomid
         }
@@ -128,7 +131,7 @@ public class AuctionService {
     // 값 비교 후 더 높은값 제시
 
     public void auctionCompare(AuctionMessage message) {
-        try (Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT)) {
+        try (Jedis jedis =getJedis()) {
             System.out.println("비교메서드!!!!!");
 
             long backupKey = 0;
@@ -143,13 +146,13 @@ public class AuctionService {
                     if (value > backupKey) {
                         auction(String.valueOf(value), message);
                     } else {
-                        System.out.println("이전값 보다 더 높은값을 제시해야 합니다.");
+                        logger.error("이전값 보다 더 높은값을 제시해야 합니다.");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("유효한 숫자가 아닙니다.");
+                    logger.error("유효한 숫자가 아닙니다.");
                 }
             } else {
-                System.out.println("backupKey의 값이 null입니다.");
+                logger.error("backupKey의 값이 null입니다.");
             }
         }
     }
@@ -157,10 +160,14 @@ public class AuctionService {
 
 
     public List<String> getChatMessages(String roomId, int start, int end) {
-        try (Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT)) {
+        try (Jedis jedis = getJedis()) {
             String roomKey = roomId;
             return jedis.lrange(roomKey, start, end); // 지정된 범위의 채팅 메시지 가져오기
         }
+    }
+
+    private Jedis getJedis() {
+        return new Jedis(REDIS_HOST, REDIS_PORT);
     }
 
 }
