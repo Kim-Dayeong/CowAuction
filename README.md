@@ -3,7 +3,7 @@ SpringBoot / JPA / mysql / Redis / JWT / RestAPI / WebSocket / Swagger
 ![horseErd](https://github.com/Kim-Dayeong/HorseAuction/assets/114847045/15dec346-cfc1-4acc-80f1-3cc3c3f4f7f6)
 
 <h2>말 경매 프로젝트</h2>
-말을 실시간으로 경매를 통해 사고 팔고 관리할수 있는 서비스 입니다.
+말을 실시간으로 경매를 통해 판매,구입,관리할 수 있는 서비스 입니다.
 
 
 
