@@ -1,5 +1,6 @@
 package com.hoarse.auction.web.entity.horse;
 
+import com.hoarse.auction.web.dto.horse.HorseupdateDto;
 import com.hoarse.auction.web.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -75,6 +76,17 @@ public class Horse {
         this.uniqueNum = uniqueNum;
         this.bidPrice = bidPrice;
 
+    }
+    public void update(HorseupdateDto updateDto) {
+        this.name = updateDto.getName();
+        this.birth = updateDto.getBirth();
+        this.furcolor = updateDto.getFurcolor();
+        this.mother = updateDto.getMother();
+        this.father = updateDto.getFather();
+        this.owner = updateDto.getOwner();
+        this.producer = updateDto.getProducer();
+        this.uniqueNum = updateDto.getUniqueNum();
+        this.bidPrice = updateDto.getBidPrice();
     }
 
 

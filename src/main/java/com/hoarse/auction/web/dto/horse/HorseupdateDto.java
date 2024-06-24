@@ -9,8 +9,12 @@ import lombok.Setter;
 @Setter
 public class HorseupdateDto {
     private String name;
+    private String birth;
     private String furcolor;
-    private Member owner;
     private Horse mother;
     private Horse father;
+    private Member owner;
+    private Member producer;
+    private String uniqueNum;
+    private Long bidPrice;
 }

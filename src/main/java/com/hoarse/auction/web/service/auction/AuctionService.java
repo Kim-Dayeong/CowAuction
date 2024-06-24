@@ -5,7 +5,7 @@ import com.hoarse.auction.web.entity.auction.AuctionRoom;
 import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.repository.Auction.AuctionRoomRepository;
-import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
+import com.hoarse.auction.web.repository.hoarse.HorseRepository;
 import com.hoarse.auction.web.repository.member.MemberRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
@@ -18,10 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 @Service
 @AllArgsConstructor
@@ -29,7 +26,7 @@ public class AuctionService {
 
     private static final String AUCTION_KEY = "auction";
 
-    private final HoarseRepository hoarseRepository;
+    private final HorseRepository horseRepository;
     private final AuctionRoomRepository auctionRoomRepository;
 
     private final MemberRepository memberRepository;
@@ -111,7 +108,7 @@ public class AuctionService {
                         .orElseThrow(() -> new IllegalArgumentException("해당하는 멤버를 찾을 수 없습니다."));
                 hoarse.setOwner(owner);
                 hoarse.setBidPrice(Long.valueOf(finalvalue));
-                hoarseRepository.save(hoarse);
+                horseRepository.save(hoarse);
 
             }
 

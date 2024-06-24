@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface HoarseRepository extends JpaRepository<Horse, Long> {
+public interface HorseRepository extends JpaRepository<Horse, Long> {
    Horse findByName(String name);
 
    Horse findByuniqueNum(String uniqueNum);

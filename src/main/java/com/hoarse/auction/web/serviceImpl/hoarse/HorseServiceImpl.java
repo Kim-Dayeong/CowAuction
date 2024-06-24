@@ -7,11 +7,10 @@ import com.hoarse.auction.web.dto.horse.HorseupdateDto;
 import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.module.RandomMaker;
-import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
+import com.hoarse.auction.web.repository.hoarse.HorseRepository;
 import com.hoarse.auction.web.repository.member.MemberRepository;
 import com.hoarse.auction.web.service.horse.HorseService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,7 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HorseServiceImpl implements HorseService {
 
-    private final HoarseRepository hoarseRepository;
+    private final HorseRepository horseRepository;
     private final MemberRepository memberRepository;
 
     @Override
@@ -35,7 +34,7 @@ public class HorseServiceImpl implements HorseService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Member member = memberRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()-> new BadCredentialsException("회원 정보를 찾을 수 없습니다."));
-        Horse hoarse = hoarseRepository.save(
+        Horse hoarse = horseRepository.save(
                 Horse.builder()
                         .birth(hoarseRequest.getBirth()).name(hoarseRequest.getName()).furcolor(hoarseRequest.getFurcolor()).uniqueNum(RandomMaker.func())// 랜덤값 예외처리
                         .owner(hoarseRequest.getOwner()).producer(member).mother(hoarseRequest.getMother()).father(hoarseRequest.getFather())
@@ -50,7 +49,7 @@ public class HorseServiceImpl implements HorseService {
     @Override
     public HorseDto updateHoarse(Long hoarseId, HorseupdateDto requestDto, Member member) {
 
-        Horse hoarse = hoarseRepository.findById(hoarseId).orElseThrow(()-> new EntityNotFoundException("말 정보를 찾을 수 없습니다."));
+        Horse hoarse = horseRepository.findById(hoarseId).orElseThrow(()-> new EntityNotFoundException("말 정보를 찾을 수 없습니다."));
         if(!hoarse.getProducer().getUsername().equals(member.getUsername())){
 
             throw new AccessDeniedException("회원 정보가 일치하지 않습니다.");
@@ -62,7 +61,7 @@ public class HorseServiceImpl implements HorseService {
         hoarse.setName(requestDto.getName());
 
         hoarse.setFurcolor(requestDto.getFurcolor());
-        hoarseRepository.save(hoarse);
+        horseRepository.save(hoarse);
 
         return HorseDto.builder()
                 .id(hoarse.getId())
@@ -80,17 +79,17 @@ public class HorseServiceImpl implements HorseService {
     @Override
     public void deleteHorse(Long hoarseId, Member member){
 
-        Horse hoarse = hoarseRepository.findById(hoarseId).orElseThrow(()-> new EntityNotFoundException("말 정보를 찾을 수 없습니다."));
+        Horse hoarse = horseRepository.findById(hoarseId).orElseThrow(()-> new EntityNotFoundException("말 정보를 찾을 수 없습니다."));
         if(!hoarse.getProducer().getUsername().equals(member.getUsername())) {
             throw new AccessDeniedException("회원 정보가 일치하지 않습니다.");
         }
-        hoarseRepository.delete(hoarse);
+        horseRepository.delete(hoarse);
     }
 
 
     @Override
     public HorseDto findHoarse(Long hoarseId){
-        Horse hoarse = hoarseRepository.findById(hoarseId).orElseThrow(()-> new BadCredentialsException("말 정보를 찾을 수 없습니다."));
+        Horse hoarse = horseRepository.findById(hoarseId).orElseThrow(()-> new BadCredentialsException("말 정보를 찾을 수 없습니다."));
         return HorseDto.builder().id(hoarse.getId()).name(hoarse.getName()).furcolor(hoarse.getFurcolor())
                 .uniqueNum(hoarse.getUniqueNum())
                 .birth(hoarse.getBirth())
@@ -101,7 +100,7 @@ public class HorseServiceImpl implements HorseService {
 
     @Override
     public HorseDto findHoarsename(String name){ // 중복될 경우 예외 수정
-        Horse hoarse = Optional.ofNullable(hoarseRepository.findByName(name)).orElseThrow(() -> new BadCredentialsException("말 정보를 찾을 수 없습니다."));
+        Horse hoarse = Optional.ofNullable(horseRepository.findByName(name)).orElseThrow(() -> new BadCredentialsException("말 정보를 찾을 수 없습니다."));
         return HorseDto.builder().id(hoarse.getId()).name(hoarse.getName()).furcolor(hoarse.getFurcolor())
                 .uniqueNum(hoarse.getUniqueNum())
                 .birth(hoarse.getBirth())
@@ -112,7 +111,7 @@ public class HorseServiceImpl implements HorseService {
 
     @Override
     public List<HorseResponseDto> hoarseList(){
-        List<Horse> hoarses = hoarseRepository.findAll();
+        List<Horse> hoarses = horseRepository.findAll();
         List<HorseResponseDto> hoarselist = new ArrayList<>();
 
         for (Horse hoarse : hoarses){

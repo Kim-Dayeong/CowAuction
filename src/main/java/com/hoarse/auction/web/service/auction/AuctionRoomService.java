@@ -4,11 +4,10 @@ import com.hoarse.auction.web.entity.auction.AuctionRoom;
 import com.hoarse.auction.web.entity.horse.Horse;
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.repository.Auction.AuctionRoomRepository;
-import com.hoarse.auction.web.repository.hoarse.HoarseRepository;
+import com.hoarse.auction.web.repository.hoarse.HorseRepository;
 import com.hoarse.auction.web.repository.member.MemberRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ import java.util.*;
 
 public class AuctionRoomService {
 
-    private final HoarseRepository hoarseRepository;
+    private final HorseRepository horseRepository;
     private final AuctionRoomRepository auctionRoomRepository;
     private final MemberRepository memberRepository;
 
@@ -56,7 +55,7 @@ public class AuctionRoomService {
 
     //채팅방 생성
     public AuctionRoom createRoom(String name, String uniqueNum) {
-        Horse hoarse = hoarseRepository.findByuniqueNum(uniqueNum);
+        Horse hoarse = horseRepository.findByuniqueNum(uniqueNum);
         AuctionRoom auctionRoom =AuctionRoom.create(name, hoarse);
 
         auctionRoomRepository.save(auctionRoom); // 채팅방 저장
