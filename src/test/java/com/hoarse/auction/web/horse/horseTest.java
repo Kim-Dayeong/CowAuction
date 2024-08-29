@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -28,6 +29,9 @@ public class horseTest {
 
     @Mock
     private HorseRepository horseRepository;
+    @Mock
+    private HorseService horseService;
+
 
     @Mock
     private Member member;
@@ -35,33 +39,33 @@ public class horseTest {
     @Test
     @DisplayName("말 생성 테스트")
     public void testCreateHorse() {
-    Member owner = new Member();
-    Member producer = new Member();
+        Member owner = new Member();
+        Member producer = new Member();
 
-    // Horse 객체 생성
-    Horse horse = Horse.builder()
-            .name("Test Horse")
-            .birth("2024-01-01")
-            .furcolor("Black")
-            .mother(null)
-            .father(null)
-            .owner(owner)
-            .producer(producer)
-            .uniqueNum("123456")
-            .bidPrice(null)
-            .build();
+        // Horse 객체 생성
+        Horse horse = Horse.builder()
+                .name("Test Horse")
+                .birth("2024-01-01")
+                .furcolor("Black")
+                .mother(null)
+                .father(null)
+                .owner(owner)
+                .producer(producer)
+                .uniqueNum("123456")
+                .bidPrice(null)
+                .build();
 
-    // Horse 객체의 속성이 올바르게 설정되었는지 검증
-    assertEquals("Test Horse", horse.getName());
-    assertEquals("2024-01-01", horse.getBirth());
-    assertEquals("Black", horse.getFurcolor());
-    assertNull(horse.getMother());
-    assertNull(horse.getFather());
-    assertEquals(owner, horse.getOwner());
-    assertEquals(producer, horse.getProducer());
-    assertEquals("123456", horse.getUniqueNum());
-    assertNull(horse.getBidPrice());
-}
+        // Horse 객체의 속성이 올바르게 설정되었는지 검증
+        assertEquals("Test Horse", horse.getName());
+        assertEquals("2024-01-01", horse.getBirth());
+        assertEquals("Black", horse.getFurcolor());
+        assertNull(horse.getMother());
+        assertNull(horse.getFather());
+        assertEquals(owner, horse.getOwner());
+        assertEquals(producer, horse.getProducer());
+        assertEquals("123456", horse.getUniqueNum());
+        assertNull(horse.getBidPrice());
+    }
 
     @Test
     @DisplayName("말 수정 테스트")
@@ -87,10 +91,20 @@ public class horseTest {
         assertEquals(requestDto.getFurcolor(), horse.getFurcolor());
         verify(horseRepository, times(1)).save(horse);
     }
+
+
+    @Test
+    public void testDeleteHorse() {
+
+        Optional<Horse> foundHorse =horseRepository.findById(horse.getId());
+        assertThat(foundHorse).isPresent();
+
+        // Delete horse
+        horseService.deleteHorse(horse.getId(),horse.getOwner());
+
+        // After deletion
+        foundHorse = horseRepository.findById(horse.getId());
+        assertThat(foundHorse).isNotPresent();
     }
-//    @Test
-//    @DisplayName("말 삭제 테스트")
-//    public void testDeleteHorse() {
-//
-//    }
+}
 
