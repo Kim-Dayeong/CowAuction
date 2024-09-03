@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @Builder
-@Entity(name = "Member")
+@Entity(name = "member")
 public class Member implements UserDetails {
 
     @jakarta.persistence.Id

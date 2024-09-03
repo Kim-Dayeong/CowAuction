@@ -10,9 +10,11 @@ import com.hoarse.auction.web.serviceImpl.hoarse.HorseServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
@@ -96,15 +98,13 @@ public class horseTest {
     @Test
     public void testDeleteHorse() {
 
-        Optional<Horse> foundHorse =horseRepository.findById(horse.getId());
-        assertThat(foundHorse).isPresent();
+        Long horseId = 1L;
+        when(horseRepository.findById(horseId)).thenReturn(Optional.of(horse));
 
-        // Delete horse
-        horseService.deleteHorse(horse.getId(),horse.getOwner());
+        horseService.deleteHorse(horseId,member);
 
-        // After deletion
-        foundHorse = horseRepository.findById(horse.getId());
-        assertThat(foundHorse).isNotPresent();
+        verify(horseRepository, times(1)).deleteById(horseId);
+
     }
 }
 

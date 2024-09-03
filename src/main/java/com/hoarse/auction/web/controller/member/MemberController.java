@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -79,7 +80,7 @@ public class MemberController {
     public ResponseEntity<JwtResponseDTO> login(@RequestBody MemberRequestDto memberRequestDto,JwtResponseDTO jwtResponseDTO) {
         // 사용자 정보 확인 및 토큰 생성
         MemberDto member = memberService.findByEmailAndPassword(memberRequestDto.getUsername(), memberRequestDto.getPassword());
-       jwtResponseDTO = jwtConfig.createToken(member.getUsername(), Arrays.asList(member.getRole().getValue()));
+       jwtResponseDTO = jwtConfig.createToken(member.getUsername(), Collections.singletonList(member.getRole().getValue()));
 
         // 토큰을 응답으로 반환
         return ResponseEntity.ok(jwtResponseDTO);

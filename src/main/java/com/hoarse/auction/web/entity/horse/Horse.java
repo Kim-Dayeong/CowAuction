@@ -15,12 +15,12 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@Entity(name = "Hoarse")
+@Entity(name = "Horse")
 public class Horse {
 
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="HoarseId")
+    @Column(name="HorseId")
     private Long id;
 
     @Column(nullable = false)

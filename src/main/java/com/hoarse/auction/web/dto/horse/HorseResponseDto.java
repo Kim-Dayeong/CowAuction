@@ -7,15 +7,15 @@ import lombok.Getter;
 @Getter
 public class HorseResponseDto {
 
-    private Long id;
-    private String name;
-    private String birth;
-    private String furcolor;
-    private Member owner;
-    private Horse mother;
-    private Horse father;
-    private Member producer;
-    private String uniqueNum;
+    private final Long id;
+    private final String name;
+    private final String birth;
+    private final String furcolor;
+    private final Member owner;
+    private final Horse mother;
+    private final Horse father;
+    private final Member producer;
+    private final String uniqueNum;
 
 
     public HorseResponseDto(Horse entity){
