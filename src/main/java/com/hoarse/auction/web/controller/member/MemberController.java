@@ -8,8 +8,6 @@ import com.hoarse.auction.web.dto.horse.HorseRequestDto;
 import com.hoarse.auction.web.dto.horse.HorseResponseDto;
 import com.hoarse.auction.web.dto.jwt.JwtResponseDTO;
 import com.hoarse.auction.web.dto.member.updateResponseMemberDto;
-import com.hoarse.auction.web.dto.member.MemberDto;
-import com.hoarse.auction.web.dto.member.MemberRequestDto;
 
 import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.auth.AuthService;
