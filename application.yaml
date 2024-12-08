@@ -1,18 +1,18 @@
 #DB
-spring:
-  datasource:
-    url: ${url}
-    driver-class-name: ${driverClassName}
-    username: ${username}
-    password: ${password}
+#spring:
+  #datasource:
+    #url: ${url}
+   # driver-class-name: ${driverClassName}
+   # username: ${username}
+  #  password: ${password}
 
-  jpa:
-    hibernate:
-    ddl-auto: create
-  properties:
-    hibernate:
-      dialect: spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
-      show_sql: true
-      format_sql: true
+  #jpa:
+  #  hibernate:
+   # ddl-auto: create
+ # properties:
+   # hibernate:
+     # dialect: spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+    #  show_sql: true
+    #  format_sql: true
 
     

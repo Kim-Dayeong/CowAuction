@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@AllArgsConstructor
 public class AuctionService {
 
     private static final String AUCTION_KEY = "auction";
@@ -32,15 +31,24 @@ public class AuctionService {
     private final MemberRepository memberRepository;
     private static final long AUCTION_DURATION = TimeUnit.MINUTES.toMillis(1); // 1분
 
-    @Value("${spring.redis.host}")
-    private String REDIS_HOST;
 
-    @Value("${redis.port}")
-    private int REDIS_PORT;
+    private final String REDIS_HOST;
+    private final int REDIS_PORT;
 
     private static final Logger logger = LoggerFactory.getLogger(AuctionService.class);
 
-
+    public AuctionService( //@allautowired 대신 직접 생성자
+            HorseRepository horseRepository,
+            AuctionRoomRepository auctionRoomRepository,
+            MemberRepository memberRepository,
+            @Value("${spring.redis.host}") String redisHost,
+            @Value("${redis.port}") int redisPort) {
+        this.horseRepository = horseRepository;
+        this.auctionRoomRepository = auctionRoomRepository;
+        this.memberRepository = memberRepository;
+        this.REDIS_HOST = redisHost;
+        this.REDIS_PORT = redisPort;
+    }
 
     // 기본값 설정
     public void auctionInit(){
@@ -53,10 +61,10 @@ public class AuctionService {
         jedis.set(endtimeKey, String.valueOf(endtime));
         jedis.close();
     }
-    @PostConstruct //bean 생성후 한번만 실행
-    public void init() {
-        auctionInit();
-    }
+//    @PostConstruct //bean 생성후 한번만 실행
+//    public void init() {
+//        auctionInit();
+//    }
 
     private void auction(String value, AuctionMessage message) {
 

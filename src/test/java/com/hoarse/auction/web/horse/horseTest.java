@@ -73,7 +73,7 @@ public class horseTest {
     @DisplayName("말 수정 테스트")
     public void testUpdateHorse() {
         // Given
-        Long hoarseId = 1L;
+        Long hoarseId = 10L;
         HorseupdateDto requestDto = new HorseupdateDto();
         requestDto.setOwner(new Member());
         requestDto.setFather(new Horse());

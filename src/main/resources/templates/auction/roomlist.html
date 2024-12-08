@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Websocket Chat</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <!-- CSS -->
+  <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/dist/css/bootstrap.min.css">
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<div class="container" id="app">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>옥션채팅방 리스트</h3>
+    </div>
+  </div>
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <label class="input-group-text">방제목</label>
+    </div>
+    <input type="text" class="form-control" id="room_name">
+    <div class="input-group-prepend">
+      <label class="input-group-text">hoarseId</label>
+    </div>
+    <input type="text" class="form-control" id="hoarseId">
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="button" id="createRoomBtn">채팅방 개설</button>
+    </div>
+  </div>
+  <ul class="list-group" id="auctionRoomsList">
+    <!-- 경매방 목록이 여기에 동적으로 추가됩니다 -->
+  </ul>
+</div>
+
+<!-- JavaScript -->
+<script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // 경매방 목록을 가져오는 함수
+    function findAllRoom() {
+      axios.get('/auction/rooms')
+        .then(response => {
+          const auctionRooms = response.data;
+          const auctionRoomsList = document.getElementById('auctionRoomsList');
+          auctionRoomsList.innerHTML = ''; // 기존 목록 초기화
+
+          auctionRooms.forEach(item => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item', 'list-group-item-action');
+            li.textContent = item.roomName;
+            li.onclick = function() {
+              enterRoom(item.roomId);
+            };
+            auctionRoomsList.appendChild(li);
+          });
+        })
+        .catch(error => {
+          console.error('채팅방 목록을 가져오는 데 실패했습니다:', error);
+        });
+    }
+
+    // 채팅방 개설 함수
+    function createRoom() {
+      const roomName = document.getElementById('room_name').value;
+      const hoarseId = document.getElementById('hoarseId').value;
+
+      if (!roomName) {
+        alert("방 제목을 입력해 주십시오.");
+        return;
+      } else if (!hoarseId) {
+        alert("hoarseId를 입력해 주십시오.");
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.append("name", roomName);
+      params.append("hoarseId", hoarseId);
+
+      axios.post('/auction/room', params)
+        .then(response => {
+          alert(response.data.roomName + "방 개설에 성공하였습니다.");
+          document.getElementById('room_name').value = '';
+          document.getElementById('hoarseId').value = '';
+          findAllRoom();
+        })
+        .catch(error => {
+          alert("채팅방 개설에 실패하였습니다.");
+          console.error('채팅방 개설 실패:', error);
+        });
+    }
+
+    // 채팅방에 입장하는 함수
+    function enterRoom(roomId) {
+      const username = prompt("username을 입력해주세요");
+      const nickname = prompt("nickname을 입력해주세요");
+      const token = prompt("token을 입력해주세요");
+
+      localStorage.setItem("wschat.roomId", roomId);
+      localStorage.setItem('wschat.sender', nickname);
+      localStorage.setItem('wschat.username', username);
+      localStorage.setItem('wschat.token', token);
+
+      location.href = "/auction/room/enter/" + roomId;
+    }
+
+    // 채팅방 개설 버튼 클릭 시 실행
+    document.getElementById('createRoomBtn').addEventListener('click', createRoom);
+
+    // 페이지 로드 시 경매 방 목록 불러오기
+    findAllRoom();
+  });
+</script>
+</body>
+</html>

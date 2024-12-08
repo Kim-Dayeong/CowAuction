@@ -27,7 +27,7 @@ public class AuctionRoomController {
     @Operation(summary = "경매 리스트 화면 API")
     @GetMapping("/room")
     public String rooms(Model model) {
-        return "/auction/room";
+        return "/auction/roomlist";
     }
 
 
