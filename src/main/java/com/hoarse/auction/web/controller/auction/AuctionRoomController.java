@@ -24,13 +24,6 @@ public class AuctionRoomController {
     private final AuctionRoomService auctionRoomService;
 
 
-    @Operation(summary = "경매 리스트 화면 API")
-    @GetMapping("/room")
-    public String rooms(Model model) {
-        return "/auction/roomlist";
-    }
-
-
     @Operation(summary = "모든 경매방 리스트 API")
     @GetMapping("/rooms")
     @ResponseBody
@@ -46,17 +39,10 @@ public class AuctionRoomController {
             @RequestParam String name,
                                   @RequestParam String hoarseId) {
 
-        System.out.println("아이디!!!!!"+hoarseId);
+//        System.out.println("아이디!!!!!"+hoarseId);
         return auctionRoomService.createRoom(name, hoarseId);
     }
 
-    @Operation(summary = "경매방 입장 API")
-    @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable String roomId) {
-        model.addAttribute("roomId", roomId);
-
-        return "/auction/roomdetail";
-    }
 
     @Operation(summary = "특정 경매방 조회 API")
     @GetMapping("/room/{roomId}")
@@ -64,6 +50,22 @@ public class AuctionRoomController {
     public AuctionRoom roomInfo(@PathVariable String roomId) {
         return auctionRoomService.findById(roomId);
     }
+
+//    @Operation(summary = "경매 리스트 화면 API")
+//    @GetMapping("/room")
+//    public String rooms(Model model) {
+//        return "/auction/roomlist";
+//    }
+
+    //    @Operation(summary = "경매방 입장 API")
+//    @GetMapping("/room/enter/{roomId}")
+//    public String roomDetail(Model model, @PathVariable String roomId) {
+//        model.addAttribute("roomId", roomId);
+//
+//        return "/auction/roomdetail";
+//    }
+
+
 }
 
 

@@ -7,6 +7,7 @@ import com.hoarse.auction.web.config.security.SecurityUser;
 import com.hoarse.auction.web.dto.horse.HorseRequestDto;
 import com.hoarse.auction.web.dto.horse.HorseResponseDto;
 import com.hoarse.auction.web.dto.jwt.JwtResponseDTO;
+import com.hoarse.auction.web.dto.member.LoginDto;
 import com.hoarse.auction.web.dto.member.MemberDto;
 import com.hoarse.auction.web.dto.member.MemberRequestDto;
 import com.hoarse.auction.web.dto.member.updateResponseMemberDto;
@@ -57,21 +58,16 @@ public class MemberController {
     private final HorseServiceImpl horseService;
 
 
-    @GetMapping("/info")
-    public String getMemberInfo( @AuthenticationPrincipal SecurityUser principal){
+//    @GetMapping("/info")
+//    public String getMemberInfo( @AuthenticationPrincipal SecurityUser principal){
+//
+//        if (principal != null) {
+//            return "true:"+principal.getMember().getUsername();
+//        }
+//        return "null";
+//
+//    }
 
-        if (principal != null) {
-            return "true:"+principal.getMember().getUsername();
-        }
-        return "null";
-
-    }
-
-    //front
-
-
-
-    //back
 
     @Operation(summary = "회원가입 API")
     @PostMapping("/signup")
@@ -82,12 +78,12 @@ public class MemberController {
 
     @Operation(summary = "로그인 API")
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> login(@RequestBody MemberRequestDto memberRequestDto,JwtResponseDTO jwtResponseDTO) {
+    public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginDto loginDto, JwtResponseDTO jwtResponseDTO) {
         // 사용자 정보 확인 및 토큰 생성
-        MemberDto member = memberService.findByEmailAndPassword(memberRequestDto.getUsername(), memberRequestDto.getPassword());
+        MemberDto member = memberService.findByEmailAndPassword(loginDto.getUsername(), loginDto.getPassword());
        jwtResponseDTO = jwtConfig.createToken(member.getUsername(), Collections.singletonList(member.getRole().getValue()));
-
-        // 토큰을 응답으로 반환
+        // 레디스에 토큰 저장
+        // 토큰은 헤더로
         return ResponseEntity.ok(jwtResponseDTO);
     }
 
