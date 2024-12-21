@@ -16,6 +16,7 @@ import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.auth.AuthService;
 import com.hoarse.auction.web.service.horse.HorseService;
 import com.hoarse.auction.web.service.member.MemberService;
+import com.hoarse.auction.web.service.redis.TokenService;
 import com.hoarse.auction.web.serviceImpl.hoarse.HorseServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,6 +57,8 @@ public class MemberController {
     private final AuthService authService;
     private final JwtConfig jwtConfig;
     private final HorseServiceImpl horseService;
+    private final TokenService tokenService;
+
 
 
 //    @GetMapping("/info")
@@ -78,13 +81,20 @@ public class MemberController {
 
     @Operation(summary = "로그인 API")
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginDto loginDto, JwtResponseDTO jwtResponseDTO) {
+    public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginDto loginDto) {
         // 사용자 정보 확인 및 토큰 생성
         MemberDto member = memberService.findByEmailAndPassword(loginDto.getUsername(), loginDto.getPassword());
-       jwtResponseDTO = jwtConfig.createToken(member.getUsername(), Collections.singletonList(member.getRole().getValue()));
+//        jwtResponseDTO = jwtConfig.createToken(member.getUsername(), Collections.singletonList(member.getRole().getValue()));
+
+        JwtResponseDTO jwtResponse = jwtConfig.createToken(member.getUsername(),
+                Collections.singletonList(member.getRole().getValue()));
+
         // 레디스에 토큰 저장
-        // 토큰은 헤더로
-        return ResponseEntity.ok(jwtResponseDTO);
+        tokenService.saveRefreshToken(member.getUsername(), jwtResponse.getRefreshToken(), 7 * 24 * 60 * 60 * 1000); // 7일
+
+        // 토큰은 헤더로 응답
+
+        return ResponseEntity.ok(jwtResponse);
     }
 
 
