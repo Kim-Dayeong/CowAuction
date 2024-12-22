@@ -9,12 +9,14 @@ import com.hoarse.auction.web.repository.member.MemberRepository;
 import com.hoarse.auction.web.service.auth.AuthService;
 import com.hoarse.auction.web.service.member.MemberService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 import java.util.Optional;
@@ -102,6 +104,11 @@ public class MemberServiceImpl implements MemberService {
 
 
 
+    // 전체 유저 정보
+    @Override
+    public List<MemberDto> findAll() {
+        return memberRepository.findAll().stream().map(u->MemberDto.builder().id(u.getId()).password(u.getPassword()).name(u.getName()).phone(u.getPhone()).role(u.getRole()).username(u.getUsername()).build()).collect(Collectors.toList());
+    }
 
 //    public MemberDto findByEmailAndPassword(String email, String password) {
 //        Member member = Optional.ofNullable(memberRepository.findByUsername(email)).orElseThrow(()->new BadCredentialsException("이메일이나 비밀번호를 확인해주세요."));
@@ -115,11 +122,7 @@ public class MemberServiceImpl implements MemberService {
 //
 //        return MemberDto.builder().id(member.getId()).password(member.getPassword()).role(member.getRole()).username(member.getUsername()).build();
 //    }
-    // 전체 유저 정보
-    @Override
-    public List<MemberDto> findAll() {
-        return memberRepository.findAll().stream().map(u->MemberDto.builder().id(u.getId()).password(u.getPassword()).name(u.getName()).phone(u.getPhone()).role(u.getRole()).username(u.getUsername()).build()).collect(Collectors.toList());
-    }
+
 
 
 

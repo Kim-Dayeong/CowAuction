@@ -1,56 +1,36 @@
 package com.hoarse.auction.web.controller.member;
 
-import com.hoarse.auction.web.config.jwt.JwtAuthenticationFilter;
 import com.hoarse.auction.web.config.jwt.JwtConfig;
-
-import com.hoarse.auction.web.config.security.SecurityUser;
-import com.hoarse.auction.web.dto.horse.HorseRequestDto;
 import com.hoarse.auction.web.dto.horse.HorseResponseDto;
 import com.hoarse.auction.web.dto.jwt.JwtResponseDTO;
 import com.hoarse.auction.web.dto.member.LoginDto;
 import com.hoarse.auction.web.dto.member.MemberDto;
 import com.hoarse.auction.web.dto.member.MemberRequestDto;
-import com.hoarse.auction.web.dto.member.updateResponseMemberDto;
-
-import com.hoarse.auction.web.entity.member.Member;
 import com.hoarse.auction.web.service.auth.AuthService;
-import com.hoarse.auction.web.service.horse.HorseService;
 import com.hoarse.auction.web.service.member.MemberService;
 import com.hoarse.auction.web.service.redis.TokenService;
 import com.hoarse.auction.web.serviceImpl.hoarse.HorseServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.OK;
+
 
 @Slf4j
 @RestController
 @RequestMapping("api/member")
 @RequiredArgsConstructor
 @Tag(name = "회원 API")
-//@ComponentScan(basePackages = {"com.hoarse.auction.web.config.jwt"})
 public class MemberController {
 
     private final MemberService memberService;
@@ -58,18 +38,6 @@ public class MemberController {
     private final JwtConfig jwtConfig;
     private final HorseServiceImpl horseService;
     private final TokenService tokenService;
-
-
-
-//    @GetMapping("/info")
-//    public String getMemberInfo( @AuthenticationPrincipal SecurityUser principal){
-//
-//        if (principal != null) {
-//            return "true:"+principal.getMember().getUsername();
-//        }
-//        return "null";
-//
-//    }
 
 
     @Operation(summary = "회원가입 API")
@@ -84,29 +52,26 @@ public class MemberController {
     public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginDto loginDto) {
         // 사용자 정보 확인 및 토큰 생성
         MemberDto member = memberService.findByEmailAndPassword(loginDto.getUsername(), loginDto.getPassword());
-//        jwtResponseDTO = jwtConfig.createToken(member.getUsername(), Collections.singletonList(member.getRole().getValue()));
 
         JwtResponseDTO jwtResponse = jwtConfig.createToken(member.getUsername(),
                 Collections.singletonList(member.getRole().getValue()));
 
         // 레디스에 토큰 저장
         tokenService.saveRefreshToken(member.getUsername(), jwtResponse.getRefreshToken(), 7 * 24 * 60 * 60 * 1000); // 7일
-
         // 토큰은 헤더로 응답
-
         return ResponseEntity.ok(jwtResponse);
     }
 
 
 
 
-    @Operation(summary = "어드민 - 모든 회원 조회 API")
-    @GetMapping("/admin")
-    @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
-    public List<MemberDto> findAllUser() {
-        return memberService.findAll();
-    }
-
+//    @Operation(summary = "어드민 - 모든 회원 조회 API")
+//    @GetMapping("/admin")
+//    @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+//    public List<MemberDto> findAllUser() {
+//        return memberService.findAll();
+//    }
+//
 
 
 
@@ -184,8 +149,6 @@ public class MemberController {
         wb.write(response.getOutputStream());
         wb.close();
     }
-
-
 
 
 

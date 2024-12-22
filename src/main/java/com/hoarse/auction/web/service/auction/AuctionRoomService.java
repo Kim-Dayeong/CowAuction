@@ -45,7 +45,6 @@ public class AuctionRoomService {
         Member member = memberRepository.findById(userid)
                 .orElseThrow(() -> new BadCredentialsException("사용자 정보를 찾을 수 없습니다."));
         return member;
-
     }
 
     //채팅방 하나 불러오기
@@ -54,9 +53,10 @@ public class AuctionRoomService {
     }
 
     //채팅방 생성
-    public AuctionRoom createRoom(String name, String uniqueNum) {
-        Horse hoarse = horseRepository.findByuniqueNum(uniqueNum);
-        AuctionRoom auctionRoom =AuctionRoom.create(name, hoarse);
+    public AuctionRoom createRoom(String roomName, String horseNum, String username) {
+        Horse horse = horseRepository.findByuniqueNum(horseNum);
+        Member member = memberRepository.findByUsername(username);
+        AuctionRoom auctionRoom =AuctionRoom.create(roomName, horse, member);
 
         auctionRoomRepository.save(auctionRoom); // 채팅방 저장
         auctionRooms.put(auctionRoom.getRoomId(), auctionRoom);

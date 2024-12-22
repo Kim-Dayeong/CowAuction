@@ -1,19 +1,15 @@
 package com.hoarse.auction.web.controller.auction;
 
-
 import com.hoarse.auction.web.entity.auction.AuctionRoom;
 import com.hoarse.auction.web.service.auction.AuctionRoomService;
+import com.hoarse.auction.web.serviceImpl.member.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,34 +18,29 @@ import java.util.List;
 public class AuctionRoomController {
 
     private final AuctionRoomService auctionRoomService;
-
-
-    @Operation(summary = "모든 경매방 리스트 API")
-    @GetMapping("/rooms")
-    @ResponseBody
-    public List<AuctionRoom> room() {
-        return auctionRoomService.findAllRoom();
-    }
+    private final TokenService tokenService;
 
 
     @Operation(summary = "경매방 생성 API")
     @PostMapping("/room")
     @ResponseBody
     public AuctionRoom createRoom(
-            @RequestParam String name,
-                                  @RequestParam String hoarseId) {
+            @RequestParam String roomName,
+            @RequestParam String hoarseId, HttpServletRequest request) {
 
-//        System.out.println("아이디!!!!!"+hoarseId);
-        return auctionRoomService.createRoom(name, hoarseId);
+
+        return auctionRoomService.createRoom(roomName, hoarseId,tokenService.getUsername(request));
     }
 
+    //로그인 사용자 정보 가져오기
 
-    @Operation(summary = "특정 경매방 조회 API")
-    @GetMapping("/room/{roomId}")
-    @ResponseBody
-    public AuctionRoom roomInfo(@PathVariable String roomId) {
-        return auctionRoomService.findById(roomId);
-    }
+
+//    @Operation(summary = "특정 경매방 조회 API")
+//    @GetMapping("/room/{roomId}")
+//    @ResponseBody
+//    public AuctionRoom roomInfo(@PathVariable String roomId) {
+//        return auctionRoomService.findById(roomId);
+//    }
 
 //    @Operation(summary = "경매 리스트 화면 API")
 //    @GetMapping("/room")
@@ -63,6 +54,13 @@ public class AuctionRoomController {
 //        model.addAttribute("roomId", roomId);
 //
 //        return "/auction/roomdetail";
+//    }
+
+    //    @Operation(summary = "모든 경매방 리스트 API")
+//    @GetMapping("/rooms")
+//    @ResponseBody
+//    public List<AuctionRoom> room() {
+//        return auctionRoomService.findAllRoom();
 //    }
 
 
