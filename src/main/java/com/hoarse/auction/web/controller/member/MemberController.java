@@ -6,6 +6,7 @@ import com.hoarse.auction.web.dto.jwt.JwtResponseDTO;
 import com.hoarse.auction.web.dto.member.LoginDto;
 import com.hoarse.auction.web.dto.member.MemberDto;
 import com.hoarse.auction.web.dto.member.MemberRequestDto;
+import com.hoarse.auction.web.dto.member.updateResponseMemberDto;
 import com.hoarse.auction.web.service.auth.AuthService;
 import com.hoarse.auction.web.service.member.MemberService;
 import com.hoarse.auction.web.service.redis.TokenService;
@@ -15,10 +16,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.security.SecurityUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Collections;
@@ -38,6 +43,9 @@ public class MemberController {
     private final JwtConfig jwtConfig;
     private final HorseServiceImpl horseService;
     private final TokenService tokenService;
+
+    private final PasswordEncoder passwordEncoder;
+
 
 
     @Operation(summary = "회원가입 API")
@@ -62,6 +70,23 @@ public class MemberController {
         return ResponseEntity.ok(jwtResponse);
     }
 
+
+    //회원 수정
+    @Operation(summary = "회원정보 수정")
+    @PutMapping("/update")
+    public ResponseEntity updateMember(MemberRequestDto memberRequestDto){
+
+        // 로그인 회원정보 일치 확인
+        if(!SecurityUtil.getCurrentUsername().equals(memberRequestDto.getUsername())){
+            log.warn("잘못된 회원 id로 접근하였습니다.");
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        // 회원정보 수정
+        memberRequestDto.setPassword(passwordEncoder.encode(memberRequestDto.getPassword()));
+        memberService.updateMember(memberRequestDto, SecurityUtil.getCurretnUsername());
+        return new ResponseEntity(HttpStatus.OK);
+
+    }
 
 
 
@@ -164,14 +189,6 @@ public class MemberController {
 
        return ResponseEntity.ok().build();
     }
-
-    //회원 수정
-//    @PutMapping("/update/{memberId}")
-//    public updateResponseMemberDto updateMember(MemberRequestDto memberDto,
-//            @PathVariable("memberId") Long memberId,@AuthenticationPrincipal SecurityUser principal){
-//         MemberDto updatemamber = memberService.updateMember(memberId,memberDto, principal.getMember());
-//        return new updateResponseMemberDto(updatemamber.getName(),updatemamber.getPhone(),updatemamber.getPassword());
-//    }
 
 
 
